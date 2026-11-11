@@ -41,6 +41,8 @@ android {
         getByName("androidTest").assets.directories.add("$projectDir/schemas")
         // Golden parser cases and sample files are shared with the prototype in /testdata.
         getByName("test").resources.directories.add("$rootDir/testdata")
+        // Device tests check Progress text (string resources) against the same golden data.
+        getByName("androidTest").assets.directories.add("$rootDir/testdata")
     }
 
     lint {

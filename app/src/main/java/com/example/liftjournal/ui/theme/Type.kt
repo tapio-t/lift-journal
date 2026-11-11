@@ -26,6 +26,8 @@ object AppText {
     val small = BaseText.copy(fontSize = 13.sp, lineHeight = 19.sp)
     val statNumber = BaseText.copy(fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
     val statLabel = BaseText.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.08.em)
+    val chartTitle = BaseText.copy(fontSize = 15.sp, fontWeight = FontWeight.ExtraBold, letterSpacing = (-0.01).em)
+    val readout = BaseText.copy(fontSize = 13.sp, lineHeight = 19.sp)
     val chartAxis = BaseText.copy(fontSize = 10.sp)
     val chartValue = BaseText.copy(fontSize = 11.sp, fontWeight = FontWeight.Bold)
     val goalPercent = BaseText.copy(fontSize = 88.sp, fontWeight = FontWeight.ExtraBold, lineHeight = 92.sp)

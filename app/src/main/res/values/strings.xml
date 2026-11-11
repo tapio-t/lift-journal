@@ -30,4 +30,130 @@
     <string name="journals_merge_message">Merge them? The moved text is added below the existing text.</string>
     <string name="journals_merge_confirm">Merge</string>
     <string name="journals_backup_problem">Backup folder is not available. Check Goals &amp; Settings.</string>
+
+    <!--
+        Progress. Text marked up with <b> is an emphasised value; <i> is a muted aside.
+        See ui/common/StyledText.kt.
+    -->
+    <string name="progress_title">Progress</string>
+    <string name="progress_all_time">All-time</string>
+    <string name="progress_year">Year</string>
+    <string name="progress_year_button">%1$s ▾</string>
+    <string name="progress_stat_workouts">Workouts</string>
+    <string name="progress_stat_kg_in_year">kg in %1$d</string>
+    <string name="progress_stat_kg_all_time">kg all-time</string>
+    <string name="progress_stat_kg_in_month">kg in %1$s</string>
+    <string name="progress_stat_avg_per_month">avg kg / month</string>
+
+    <string name="progress_view_goal">Goal</string>
+    <string name="progress_view_total">Total volume / month</string>
+    <string name="progress_view_top">Top set / week</string>
+    <string name="progress_view_exercise">Exercise volume / month</string>
+    <string name="progress_chips_exercise">Exercise</string>
+    <string name="progress_chips_goal">Goal</string>
+    <string name="progress_show_table">Show table</string>
+    <string name="progress_show_chart">Show chart</string>
+    <string name="progress_bodyweight_hint">Bodyweight sets (bw x reps) aren\'t counted. Set your bodyweight in Goals &amp; Settings.</string>
+
+    <string name="progress_title_total_year">Total training volume per month · all exercises</string>
+    <string name="progress_title_exercise_year">%1$s · volume per month</string>
+    <string name="progress_title_top_year">%1$s · highest set weight per week</string>
+    <string name="progress_title_total_all">Average training volume per month · by year</string>
+    <string name="progress_title_exercise_all">%1$s · average volume per month · by year</string>
+    <string name="progress_title_top_all">%1$s · average weekly top set · by year</string>
+    <string name="progress_title_none_total">Training volume</string>
+    <string name="progress_title_none_exercise">Exercise volume per month</string>
+    <string name="progress_title_none_top">Highest set weight per week</string>
+    <string name="progress_no_exercise">Log a weighted set in Journals to see exercises here.</string>
+    <string name="progress_no_sets_in_year">No sets logged in %1$d. Type one in Journals, e.g. “deadlift 50 x 5”.</string>
+    <string name="progress_no_sets_yet">No sets logged yet. Type one in Journals, e.g. “deadlift 50 x 5”.</string>
+
+    <string name="progress_average_set_weight"><![CDATA[Average set weight <b>%1$s kg</b> <i>· %2$s</i>]]></string>
+    <string name="progress_sets_in_year">%1$s in %2$d</string>
+    <string name="progress_sets_all_time">%1$s all-time</string>
+
+    <string name="progress_year_so_far">%1$d so far</string>
+    <string name="progress_month_so_far">%1$s (so far)</string>
+    <string name="progress_count_in_months">%1$s in %2$s</string>
+    <string name="progress_readout_months_summary"><![CDATA[%1$s: <b>%2$s kg</b> · tap a bar for details]]></string>
+    <string name="progress_readout_month"><![CDATA[%1$s: <b>%2$s kg</b> · %3$s]]></string>
+    <string name="progress_readout_weeks_summary"><![CDATA[Best: <b>%1$s</b> (week %2$d) · latest: %3$s (week %4$d)]]></string>
+    <string name="progress_readout_weeks_none">No weighted sets in %1$d</string>
+    <string name="progress_readout_week"><![CDATA[Week %1$d · %2$s: <b>%3$s</b> on %4$s]]></string>
+    <string name="progress_readout_years_summary"><![CDATA[All-time average: <b>%1$s kg / month</b> · tap a bar for details]]></string>
+    <string name="progress_readout_years_top_summary"><![CDATA[All-time average top set: <b>%1$s kg</b> · %2$s · tap a bar]]></string>
+    <string name="progress_readout_years_top_none">No weighted sets yet</string>
+    <string name="progress_readout_year_volume"><![CDATA[%1$d: <b>%2$s kg / month</b> on average · %3$s]]></string>
+    <string name="progress_readout_year_top"><![CDATA[%1$d: average top set <b>%2$s kg</b> · %3$s]]></string>
+
+    <string name="progress_weight_kg">%1$s kg</string>
+    <string name="progress_weight_reps">%1$s kg × %2$d</string>
+    <string name="progress_bar_month">%1$s: %2$s kg</string>
+    <string name="progress_bar_week">Week %1$d: %2$s</string>
+    <string name="progress_bar_week_empty">Week %1$d: no sets</string>
+    <string name="progress_bar_year_volume">%1$d: %2$s kg / month</string>
+    <string name="progress_bar_year_top">%1$d: average top set %2$s kg</string>
+
+    <string name="progress_table_month">Month</string>
+    <string name="progress_table_volume">Volume (kg)</string>
+    <string name="progress_table_workouts">Workouts</string>
+    <string name="progress_table_sets">Sets</string>
+    <string name="progress_table_week">Week</string>
+    <string name="progress_table_dates">Dates</string>
+    <string name="progress_table_top_set">Top set</string>
+    <string name="progress_table_year">Year</string>
+    <string name="progress_table_avg_top">Avg top set (kg)</string>
+    <string name="progress_table_avg_month">Avg kg / month</string>
+    <string name="progress_table_kg">kg</string>
+    <string name="progress_table_percent" formatted="false">% of goal</string>
+    <string name="progress_table_empty">—</string>
+
+    <plurals name="progress_workouts">
+        <item quantity="one">%d workout</item>
+        <item quantity="other">%d workouts</item>
+    </plurals>
+    <plurals name="progress_sets">
+        <item quantity="one">%d set</item>
+        <item quantity="other">%d sets</item>
+    </plurals>
+    <plurals name="progress_months">
+        <item quantity="one">%d month</item>
+        <item quantity="other">%d months</item>
+    </plurals>
+    <plurals name="progress_weeks">
+        <item quantity="one">%d week</item>
+        <item quantity="other">%d weeks</item>
+    </plurals>
+    <plurals name="progress_weeks_trained">
+        <item quantity="one">%d week trained</item>
+        <item quantity="other">%d weeks trained</item>
+    </plurals>
+
+    <!-- Goals: shared by the Progress goal view and Goals & Settings. -->
+    <string name="goal_title">Goal · %1$s</string>
+    <string name="goal_now_line"><![CDATA[Now <b>%1$s</b> <i>· %2$s</i>]]></string>
+    <string name="goal_to_go"><![CDATA[<b>%1$s</b> to go]]></string>
+    <string name="goal_reached"><![CDATA[<b>Goal reached</b>]]></string>
+    <string name="goal_bodyweight_not_counted">" · bodyweight sets not counted (set bodyweight)"</string>
+    <string name="goal_basis_heaviest">heaviest set in the last 4 weeks</string>
+    <plurals name="goal_basis_average">
+        <item quantity="one">average of %d set in the last 4 weeks</item>
+        <item quantity="other">average of %d sets in the last 4 weeks</item>
+    </plurals>
+    <string name="goal_basis_week">week %1$d so far</string>
+    <string name="goal_basis_month">%1$s so far</string>
+    <string name="goal_of_goal">OF GOAL</string>
+    <string name="goal_now">Now</string>
+    <string name="goal_goal">Goal</string>
+    <string name="goal_chart_description">Now %1$s versus goal %2$s</string>
+    <string name="goal_period_week">week</string>
+    <string name="goal_period_month">month</string>
+    <string name="goal_name_top">%1$s top set %2$s</string>
+    <string name="goal_name_average">%1$s average set weight %2$s</string>
+    <string name="goal_name_volume">Total volume %1$s / %2$s</string>
+    <string name="goal_name_exercise_volume">%1$s volume %2$s / %3$s</string>
+    <string name="goal_short_top">%1$s top set</string>
+    <string name="goal_short_average">%1$s avg set</string>
+    <string name="goal_short_volume">Volume / %1$s</string>
+    <string name="goal_short_exercise_volume">%1$s vol / %2$s</string>
 </resources>

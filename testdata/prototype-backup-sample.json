@@ -1,0 +1,99 @@
+{
+ "v": 2,
+ "entries": [
+  {
+   "date": "2026-11-02",
+   "text": "squat 120 x 5, 5, 5\nbench press 82.5 x 5, 5, 4",
+   "ex": [
+    {
+     "name": "Squat",
+     "sets": [
+      {
+       "w": 120,
+       "r": 5
+      },
+      {
+       "w": 120,
+       "r": 5
+      },
+      {
+       "w": 120,
+       "r": 5
+      }
+     ]
+    },
+    {
+     "name": "Bench press",
+     "sets": [
+      {
+       "w": 82.5,
+       "r": 5
+      },
+      {
+       "w": 82.5,
+       "r": 5
+      },
+      {
+       "w": 82.5,
+       "r": 4
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "date": "2026-11-04",
+   "text": "deadlift 150 x 5, (160 x 3)\npull-up bw x 8, 8, 6\nFelt strong today",
+   "ex": [
+    {
+     "name": "Deadlift",
+     "sets": [
+      {
+       "w": 150,
+       "r": 5
+      }
+     ]
+    },
+    {
+     "name": "Pull-up",
+     "sets": [
+      {
+       "w": 0,
+       "r": 8,
+       "bw": 1
+      },
+      {
+       "w": 0,
+       "r": 8,
+       "bw": 1
+      },
+      {
+       "w": 0,
+       "r": 6,
+       "bw": 1
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "settings": {
+  "theme": "system",
+  "goals": [
+   {
+    "type": "top",
+    "ex": "squat",
+    "per": null,
+    "target": 140
+   },
+   {
+    "type": "vol",
+    "ex": null,
+    "per": "week",
+    "target": 25000
+   }
+  ],
+  "bodyweight": 80,
+  "ghost": true
+ }
+}

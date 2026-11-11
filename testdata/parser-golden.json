@@ -1,0 +1,834 @@
+{
+  "_about": "Golden cases generated from prototype/lift-journal.html parseText() and exVol(). Each set is {w: kg, r: reps} or {w: 0, r: reps, bw: bodyweight multiplier}. Volume = weight x reps; bodyweight sets count only when a bodyweight is set (here 80 kg).",
+  "cases": [
+    {
+      "case": "basic single set",
+      "input": "deadlift 50 x 5",
+      "expected": {
+        "exercises": [
+          {
+            "name": "Deadlift",
+            "sets": [
+              {
+                "w": 50,
+                "r": 5
+              }
+            ]
+          }
+        ],
+        "notes": [],
+        "errors": [],
+        "volume_kg_no_bodyweight": [
+          {
+            "name": "Deadlift",
+            "volume": 250
+          }
+        ],
+        "volume_kg_bodyweight_80": [
+          {
+            "name": "Deadlift",
+            "volume": 250
+          }
+        ]
+      }
+    },
+    {
+      "case": "kg suffix and several sets",
+      "input": "deadlift 50 kg x 5, 5, 5",
+      "expected": {
+        "exercises": [
+          {
+            "name": "Deadlift",
+            "sets": [
+              {
+                "w": 50,
+                "r": 5
+              },
+              {
+                "w": 50,
+                "r": 5
+              },
+              {
+                "w": 50,
+                "r": 5
+              }
+            ]
+          }
+        ],
+        "notes": [],
+        "errors": [],
+        "volume_kg_no_bodyweight": [
+          {
+            "name": "Deadlift",
+            "volume": 750
+          }
+        ],
+        "volume_kg_bodyweight_80": [
+          {
+            "name": "Deadlift",
+            "volume": 750
+          }
+        ]
+      }
+    },
+    {
+      "case": "no spaces",
+      "input": "deadlift 50x5",
+      "expected": {
+        "exercises": [
+          {
+            "name": "Deadlift",
+            "sets": [
+              {
+                "w": 50,
+                "r": 5
+              }
+            ]
+          }
+        ],
+        "notes": [],
+        "errors": [],
+        "volume_kg_no_bodyweight": [
+          {
+            "name": "Deadlift",
+            "volume": 250
+          }
+        ],
+        "volume_kg_bodyweight_80": [
+          {
+            "name": "Deadlift",
+            "volume": 250
+          }
+        ]
+      }
+    },
+    {
+      "case": "multiplication sign",
+      "input": "squat 100 × 5, 5",
+      "expected": {
+        "exercises": [
+          {
+            "name": "Squat",
+            "sets": [
+              {
+                "w": 100,
+                "r": 5
+              },
+              {
+                "w": 100,
+                "r": 5
+              }
+            ]
+          }
+        ],
+        "notes": [],
+        "errors": [],
+        "volume_kg_no_bodyweight": [
+          {
+            "name": "Squat",
+            "volume": 1000
+          }
+        ],
+        "volume_kg_bodyweight_80": [
+          {
+            "name": "Squat",
+            "volume": 1000
+          }
+        ]
+      }
+    },
+    {
+      "case": "decimal weight",
+      "input": "bench press 72.5 x 5, 5, 4",
+      "expected": {
+        "exercises": [
+          {
+            "name": "Bench press",
+            "sets": [
+              {
+                "w": 72.5,
+                "r": 5
+              },
+              {
+                "w": 72.5,
+                "r": 5
+              },
+              {
+                "w": 72.5,
+                "r": 4
+              }
+            ]
+          }
+        ],
+        "notes": [],
+        "errors": [],
+        "volume_kg_no_bodyweight": [
+          {
+            "name": "Bench press",
+            "volume": 1015
+          }
+        ],
+        "volume_kg_bodyweight_80": [
+          {
+            "name": "Bench press",
+            "volume": 1015
+          }
+        ]
+      }
+    },
+    {
+      "case": "weight change mid-exercise",
+      "input": "squat 100 x 5, 5, 110 x 3",
+      "expected": {
+        "exercises": [
+          {
+            "name": "Squat",
+            "sets": [
+              {
+                "w": 100,
+                "r": 5
+              },
+              {
+                "w": 100,
+                "r": 5
+              },
+              {
+                "w": 110,
+                "r": 3
+              }
+            ]
+          }
+        ],
+        "notes": [],
+        "errors": [],
+        "volume_kg_no_bodyweight": [
+          {
+            "name": "Squat",
+            "volume": 1330
+          }
+        ],
+        "volume_kg_bodyweight_80": [
+          {
+            "name": "Squat",
+            "volume": 1330
+          }
+        ]
+      }
+    },
+    {
+      "case": "two exercises on separate lines",
+      "input": "squat 80 x 5, 5, 5\nbench press 60 x 5, 5, 5",
+      "expected": {
+        "exercises": [
+          {
+            "name": "Squat",
+            "sets": [
+              {
+                "w": 80,
+                "r": 5
+              },
+              {
+                "w": 80,
+                "r": 5
+              },
+              {
+                "w": 80,
+                "r": 5
+              }
+            ]
+          },
+          {
+            "name": "Bench press",
+            "sets": [
+              {
+                "w": 60,
+                "r": 5
+              },
+              {
+                "w": 60,
+                "r": 5
+              },
+              {
+                "w": 60,
+                "r": 5
+              }
+            ]
+          }
+        ],
+        "notes": [],
+        "errors": [],
+        "volume_kg_no_bodyweight": [
+          {
+            "name": "Squat",
+            "volume": 1200
+          },
+          {
+            "name": "Bench press",
+            "volume": 900
+          }
+        ],
+        "volume_kg_bodyweight_80": [
+          {
+            "name": "Squat",
+            "volume": 1200
+          },
+          {
+            "name": "Bench press",
+            "volume": 900
+          }
+        ]
+      }
+    },
+    {
+      "case": "two exercises on one line",
+      "input": "deadlift 75 x 5, 5, 5, bench press 60 x 5, 5, 4",
+      "expected": {
+        "exercises": [
+          {
+            "name": "Deadlift",
+            "sets": [
+              {
+                "w": 75,
+                "r": 5
+              },
+              {
+                "w": 75,
+                "r": 5
+              },
+              {
+                "w": 75,
+                "r": 5
+              }
+            ]
+          },
+          {
+            "name": "Bench press",
+            "sets": [
+              {
+                "w": 60,
+                "r": 5
+              },
+              {
+                "w": 60,
+                "r": 5
+              },
+              {
+                "w": 60,
+                "r": 4
+              }
+            ]
+          }
+        ],
+        "notes": [],
+        "errors": [],
+        "volume_kg_no_bodyweight": [
+          {
+            "name": "Deadlift",
+            "volume": 1125
+          },
+          {
+            "name": "Bench press",
+            "volume": 840
+          }
+        ],
+        "volume_kg_bodyweight_80": [
+          {
+            "name": "Deadlift",
+            "volume": 1125
+          },
+          {
+            "name": "Bench press",
+            "volume": 840
+          }
+        ]
+      }
+    },
+    {
+      "case": "same exercise twice merges",
+      "input": "squat 80 x 5\nsquat 85 x 3",
+      "expected": {
+        "exercises": [
+          {
+            "name": "Squat",
+            "sets": [
+              {
+                "w": 80,
+                "r": 5
+              },
+              {
+                "w": 85,
+                "r": 3
+              }
+            ]
+          }
+        ],
+        "notes": [],
+        "errors": [],
+        "volume_kg_no_bodyweight": [
+          {
+            "name": "Squat",
+            "volume": 655
+          }
+        ],
+        "volume_kg_bodyweight_80": [
+          {
+            "name": "Squat",
+            "volume": 655
+          }
+        ]
+      }
+    },
+    {
+      "case": "case-insensitive merge, first spelling wins",
+      "input": "Squat 80 x 5\nSQUAT 85 x 3",
+      "expected": {
+        "exercises": [
+          {
+            "name": "Squat",
+            "sets": [
+              {
+                "w": 80,
+                "r": 5
+              },
+              {
+                "w": 85,
+                "r": 3
+              }
+            ]
+          }
+        ],
+        "notes": [],
+        "errors": [],
+        "volume_kg_no_bodyweight": [
+          {
+            "name": "Squat",
+            "volume": 655
+          }
+        ],
+        "volume_kg_bodyweight_80": [
+          {
+            "name": "Squat",
+            "volume": 655
+          }
+        ]
+      }
+    },
+    {
+      "case": "continuation line without name",
+      "input": "squat 100 x 5, 5\n110 x 3",
+      "expected": {
+        "exercises": [
+          {
+            "name": "Squat",
+            "sets": [
+              {
+                "w": 100,
+                "r": 5
+              },
+              {
+                "w": 100,
+                "r": 5
+              },
+              {
+                "w": 110,
+                "r": 3
+              }
+            ]
+          }
+        ],
+        "notes": [],
+        "errors": [],
+        "volume_kg_no_bodyweight": [
+          {
+            "name": "Squat",
+            "volume": 1330
+          }
+        ],
+        "volume_kg_bodyweight_80": [
+          {
+            "name": "Squat",
+            "volume": 1330
+          }
+        ]
+      }
+    },
+    {
+      "case": "note line kept as note",
+      "input": "squat 80 x 5\nfelt good today",
+      "expected": {
+        "exercises": [
+          {
+            "name": "Squat",
+            "sets": [
+              {
+                "w": 80,
+                "r": 5
+              }
+            ]
+          }
+        ],
+        "notes": [
+          "felt good today"
+        ],
+        "errors": [],
+        "volume_kg_no_bodyweight": [
+          {
+            "name": "Squat",
+            "volume": 400
+          }
+        ],
+        "volume_kg_bodyweight_80": [
+          {
+            "name": "Squat",
+            "volume": 400
+          }
+        ]
+      }
+    },
+    {
+      "case": "parentheses: warm-up set not recorded",
+      "input": "squat (60 x 10), 100 x 5, 5",
+      "expected": {
+        "exercises": [
+          {
+            "name": "Squat",
+            "sets": [
+              {
+                "w": 100,
+                "r": 5
+              },
+              {
+                "w": 100,
+                "r": 5
+              }
+            ]
+          }
+        ],
+        "notes": [],
+        "errors": [],
+        "volume_kg_no_bodyweight": [
+          {
+            "name": "Squat",
+            "volume": 1000
+          }
+        ],
+        "volume_kg_bodyweight_80": [
+          {
+            "name": "Squat",
+            "volume": 1000
+          }
+        ]
+      }
+    },
+    {
+      "case": "parentheses: middle set not recorded",
+      "input": "squat 100 x 5, (110 x 3), 5",
+      "expected": {
+        "exercises": [
+          {
+            "name": "Squat",
+            "sets": [
+              {
+                "w": 100,
+                "r": 5
+              },
+              {
+                "w": 100,
+                "r": 5
+              }
+            ]
+          }
+        ],
+        "notes": [],
+        "errors": [],
+        "volume_kg_no_bodyweight": [
+          {
+            "name": "Squat",
+            "volume": 1000
+          }
+        ],
+        "volume_kg_bodyweight_80": [
+          {
+            "name": "Squat",
+            "volume": 1000
+          }
+        ]
+      }
+    },
+    {
+      "case": "parentheses: whole line not recorded",
+      "input": "(bench 80 x 3)\nbench 70 x 5",
+      "expected": {
+        "exercises": [
+          {
+            "name": "Bench",
+            "sets": [
+              {
+                "w": 70,
+                "r": 5
+              }
+            ]
+          }
+        ],
+        "notes": [],
+        "errors": [],
+        "volume_kg_no_bodyweight": [
+          {
+            "name": "Bench",
+            "volume": 350
+          }
+        ],
+        "volume_kg_bodyweight_80": [
+          {
+            "name": "Bench",
+            "volume": 350
+          }
+        ]
+      }
+    },
+    {
+      "case": "parentheses: comment after sets",
+      "input": "row 50 x 8 (felt easy)",
+      "expected": {
+        "exercises": [
+          {
+            "name": "Row",
+            "sets": [
+              {
+                "w": 50,
+                "r": 8
+              }
+            ]
+          }
+        ],
+        "notes": [],
+        "errors": [],
+        "volume_kg_no_bodyweight": [
+          {
+            "name": "Row",
+            "volume": 400
+          }
+        ],
+        "volume_kg_bodyweight_80": [
+          {
+            "name": "Row",
+            "volume": 400
+          }
+        ]
+      }
+    },
+    {
+      "case": "bodyweight",
+      "input": "pull-up bw x 8, 8, 6",
+      "expected": {
+        "exercises": [
+          {
+            "name": "Pull-up",
+            "sets": [
+              {
+                "w": 0,
+                "r": 8,
+                "bw": 1
+              },
+              {
+                "w": 0,
+                "r": 8,
+                "bw": 1
+              },
+              {
+                "w": 0,
+                "r": 6,
+                "bw": 1
+              }
+            ]
+          }
+        ],
+        "notes": [],
+        "errors": [],
+        "volume_kg_no_bodyweight": [
+          {
+            "name": "Pull-up",
+            "volume": 0
+          }
+        ],
+        "volume_kg_bodyweight_80": [
+          {
+            "name": "Pull-up",
+            "volume": 1760
+          }
+        ]
+      }
+    },
+    {
+      "case": "bodyweight fraction decimal",
+      "input": "push-up 0.5 bw x 20",
+      "expected": {
+        "exercises": [
+          {
+            "name": "Push-up",
+            "sets": [
+              {
+                "w": 0,
+                "r": 20,
+                "bw": 0.5
+              }
+            ]
+          }
+        ],
+        "notes": [],
+        "errors": [],
+        "volume_kg_no_bodyweight": [
+          {
+            "name": "Push-up",
+            "volume": 0
+          }
+        ],
+        "volume_kg_bodyweight_80": [
+          {
+            "name": "Push-up",
+            "volume": 800
+          }
+        ]
+      }
+    },
+    {
+      "case": "bodyweight fraction slash and change",
+      "input": "dips 1/2 bw x 10, 0.75 bw x 8",
+      "expected": {
+        "exercises": [
+          {
+            "name": "Dips",
+            "sets": [
+              {
+                "w": 0,
+                "r": 10,
+                "bw": 0.5
+              },
+              {
+                "w": 0,
+                "r": 8,
+                "bw": 0.75
+              }
+            ]
+          }
+        ],
+        "notes": [],
+        "errors": [],
+        "volume_kg_no_bodyweight": [
+          {
+            "name": "Dips",
+            "volume": 0
+          }
+        ],
+        "volume_kg_bodyweight_80": [
+          {
+            "name": "Dips",
+            "volume": 880
+          }
+        ]
+      }
+    },
+    {
+      "case": "bodyweight multiple without space",
+      "input": "chin-up 1.25bw x 5",
+      "expected": {
+        "exercises": [
+          {
+            "name": "Chin-up",
+            "sets": [
+              {
+                "w": 0,
+                "r": 5,
+                "bw": 1.25
+              }
+            ]
+          }
+        ],
+        "notes": [],
+        "errors": [],
+        "volume_kg_no_bodyweight": [
+          {
+            "name": "Chin-up",
+            "volume": 0
+          }
+        ],
+        "volume_kg_bodyweight_80": [
+          {
+            "name": "Chin-up",
+            "volume": 500
+          }
+        ]
+      }
+    },
+    {
+      "case": "unreadable token reported",
+      "input": "bench 7O x 5",
+      "expected": {
+        "exercises": [],
+        "notes": [],
+        "errors": [
+          "bench 7O x 5"
+        ],
+        "volume_kg_no_bodyweight": [],
+        "volume_kg_bodyweight_80": []
+      }
+    },
+    {
+      "case": "reps before any exercise is an error",
+      "input": "5, 5, 5",
+      "expected": {
+        "exercises": [],
+        "notes": [],
+        "errors": [
+          "5",
+          "5",
+          "5"
+        ],
+        "volume_kg_no_bodyweight": [],
+        "volume_kg_bodyweight_80": []
+      }
+    },
+    {
+      "case": "Finnish letters in name",
+      "input": "kyykky 80 x 5",
+      "expected": {
+        "exercises": [
+          {
+            "name": "Kyykky",
+            "sets": [
+              {
+                "w": 80,
+                "r": 5
+              }
+            ]
+          }
+        ],
+        "notes": [],
+        "errors": [],
+        "volume_kg_no_bodyweight": [
+          {
+            "name": "Kyykky",
+            "volume": 400
+          }
+        ],
+        "volume_kg_bodyweight_80": [
+          {
+            "name": "Kyykky",
+            "volume": 400
+          }
+        ]
+      }
+    },
+    {
+      "case": "empty",
+      "input": "",
+      "expected": {
+        "exercises": [],
+        "notes": [],
+        "errors": [],
+        "volume_kg_no_bodyweight": [],
+        "volume_kg_bodyweight_80": []
+      }
+    }
+  ]
+}

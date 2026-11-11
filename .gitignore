@@ -1,0 +1,35 @@
+# Android Studio / Gradle
+.gradle/
+build/
+*/build/
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+*.ap_
+*.dex
+output-metadata.json
+
+# IntelliJ / Android Studio
+.idea/*
+!.idea/codeStyles/
+!.idea/runConfigurations/
+*.iml
+.navigation/
+
+# Kotlin
+.kotlin/
+
+# Signing (never commit keys)
+*.jks
+*.keystore
+keystore.properties
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude Code local settings (personal, not shared)
+.claude/settings.local.json

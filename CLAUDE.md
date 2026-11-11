@@ -41,7 +41,7 @@ All code must be easy for a person to read and change. Follow the "Code quality"
 Lift Journal is a minimal black-and-white fitness journal for Android. The user types sets as plain text, for example `deadlift 50 x 5, 5, 5`. The app calculates volume, top sets and goal progress.
 
 - `docs/SPEC.md`: what the app does (authoritative product spec).
-- `docs/PLAN.md`: tech stack, architecture and phased plan with acceptance checks. Work phase by phase.
+- `docs/PLAN.md`: tech stack, architecture and phased plan with acceptance checks. **Pull request #1 is the whole working app** (all phases, on branch `feature/full-app`). It is built phase by phase, with a commit per phase and a status checkpoint after each. It needs one up-front proposal and approval; see "Delivery" in the plan.
 - `prototype/lift-journal.html`: working HTML prototype. Open it in Chrome to see intended behaviour. Its JavaScript is the reference implementation for parsing and calculations.
 - `testdata/parser-golden.json`: golden parser cases generated from the prototype. The Kotlin parser must pass all of them.
 - `testdata/prototype-backup-sample.json`: prototype backup that the app must be able to restore.
@@ -71,7 +71,9 @@ Run from the repository root, in Android Studio's terminal:
 
 ## Git workflow
 
-- `main` is always buildable. Do each phase step on a branch (`feature/…`, `fix/…`) and merge via pull request.
+- `main` is always buildable.
+- **First pull request:** the complete app on `feature/full-app`, with one or more commits per phase. Merge only when every acceptance check in `docs/PLAN.md` passes.
+- **After that:** each fix or feature goes on its own branch (`feature/…`, `fix/…`) and is merged via a small pull request.
 - Small, focused commits with imperative messages ("Add golden tests for entry parser").
 - Never commit signing keys, `local.properties` or build output (see `.gitignore`).
 - Update `docs/SPEC.md` or `docs/PLAN.md` in the same pull request when behaviour or the plan changes, once the owner has approved it.

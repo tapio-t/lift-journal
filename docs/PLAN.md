@@ -75,7 +75,33 @@ app/src/main/java/com/example/liftjournal/
   backup/          RealtimeBackupManager (SAF folder writes)
 ```
 
-## Phases
+## Delivery: the whole working app in the first pull request
+
+**Pull request #1 delivers the complete working app**: all of phases 0–8 below, on one branch, `feature/full-app`. It is merged to `main` only when the whole app works on a phone.
+
+How PR #1 is built:
+
+1. **One proposal up front.** Claude Code proposes the full implementation:
+   - the module and package structure
+   - dependencies and versions
+   - the database schema
+   - the screens
+   - the order of work
+   - risks
+
+   The owner approves it once. After that, Claude Code implements the phases in order without asking again. It stops and re-proposes only if something has to change from the approved proposal, e.g. a different library, a schema change, or a spec conflict.
+2. **One commit (or a few) per phase,** with messages like `Phase 3: Journals with edit/delete and ghost text`. The pull request can then be reviewed and bisected phase by phase, even though it merges as one.
+3. **Checkpoints inside the branch.** After each phase:
+   - the app must build and the tests written so far must pass;
+   - Claude Code posts a short status in chat: what's done, how to try it, what's next.
+
+   You can install the debug build from the branch at any checkpoint.
+4. **Pull request description.** It lists every phase with its acceptance checks ticked, test results, known limitations, and the answers used for the open questions at the end of this document. Where you haven't decided, the default given there is used and marked.
+5. **Merge criteria:** every acceptance check in phases 0–8 passes on a real phone; unit, UI and lint checks are green; and the code-quality rules are met.
+
+**After PR #1:** bug fixes, changes and new features each go in their own small pull request, proposed first as usual.
+
+## Phases (all part of pull request #1)
 
 Each phase ends with:
 
@@ -199,8 +225,10 @@ Each phase ends with:
 
 ## Open questions for the owner
 
-1. **Unreadable sets in Journals.** The prototype silently ignores text it can't read as sets. Should the app show a subtle marker, for example an underline, on unreadable parts?
-2. **Bodyweight history.** Bodyweight is currently one value applied to all history. Should it become a dated log, so old bodyweight sets keep the bodyweight they had?
-3. **Volume goals.** They count the current week or month so far, starting from 0 again each period. Should there be an option to compare against the last full week or month instead?
-4. **Android Auto Backup** (to the Google account): off by default, since backup goes to the chosen folder. Enable it as an extra safety net?
-5. **Units.** kg only, or add an lb option?
+If these are still unanswered when pull request #1 is built, the **default** is used and marked in the pull request description.
+
+1. **Unreadable sets in Journals.** The prototype silently ignores text it can't read as sets. Should the app show a subtle marker, for example an underline, on unreadable parts? *Default: no marker, same as the prototype.*
+2. **Bodyweight history.** Bodyweight is currently one value applied to all history. Should it become a dated log, so old bodyweight sets keep the bodyweight they had? *Default: one value.*
+3. **Volume goals.** They count the current week or month so far, starting from 0 again each period. Should there be an option to compare against the last full week or month instead? *Default: current week or month so far.*
+4. **Android Auto Backup** (to the Google account): off by default, since backup goes to the chosen folder. Enable it as an extra safety net? *Default: off.*
+5. **Units.** kg only, or add an lb option? *Default: kg only.*

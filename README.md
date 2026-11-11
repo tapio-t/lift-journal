@@ -22,8 +22,13 @@ The Android project (`app/`, Gradle files) is created in phase 0 of `docs/PLAN.m
 
 1. Clone the repository and open the folder in Android Studio.
 2. Open Android Studio's terminal at the repository root and start Claude Code with `claude`. See the [Claude Code docs](https://docs.claude.com/en/docs/claude-code/overview) for installation.
-3. Ask Claude Code to start **Phase 0** of `docs/PLAN.md`. It reads `CLAUDE.md` automatically and will propose the project setup before creating anything.
-4. Work phase by phase: approve each proposal, review the change, run the app, then merge.
+3. Ask Claude Code to build **pull request #1, the whole working app** (see "Delivery" in `docs/PLAN.md`). It reads `CLAUDE.md` automatically and proposes the full implementation once before creating anything.
+4. After you approve, it builds all phases on `feature/full-app`, with a commit and a short status checkpoint per phase. Try the debug build at any checkpoint, then merge when every acceptance check passes.
+5. Later fixes and features go in small, separate pull requests.
+
+Suggested first message:
+
+> Read CLAUDE.md and docs/PLAN.md. Propose pull request #1: the whole working app, all phases 0–8, on branch feature/full-app. Include structure, dependencies, database schema, screens, order of work and risks. Don't create anything until I approve.
 
 ## Entry format at a glance
 

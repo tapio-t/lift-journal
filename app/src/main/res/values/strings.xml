@@ -6,4 +6,28 @@
     <string name="tab_journals">Journals</string>
     <string name="tab_progress">Progress</string>
     <string name="tab_settings">Goals &amp; Settings</string>
+
+    <!-- Common -->
+    <string name="action_cancel">Cancel</string>
+    <string name="action_ok">OK</string>
+    <string name="action_undo">Undo</string>
+
+    <!-- Journals -->
+    <string name="journals_search_placeholder">Search</string>
+    <string name="journals_search_label">Search journals</string>
+    <string name="journals_clear_search">Clear search</string>
+    <string name="journals_no_months">No journals yet</string>
+    <string name="journals_none_found">No journals found.</string>
+    <string name="journals_entry_label">Journal %1$s</string>
+    <string name="journals_change_top_date">Change date, %1$s</string>
+    <string name="journals_edit_entry">Edit entry %1$s</string>
+    <string name="journals_menu_change_date">Change date</string>
+    <string name="journals_menu_delete">Delete</string>
+    <string name="journals_delete_question">Do you really want to delete journal entry?</string>
+    <string name="journals_delete_confirm">Delete</string>
+    <string name="journals_entry_deleted">Entry deleted</string>
+    <string name="journals_merge_title">%1$s already has an entry</string>
+    <string name="journals_merge_message">Merge them? The moved text is added below the existing text.</string>
+    <string name="journals_merge_confirm">Merge</string>
+    <string name="journals_backup_problem">Backup folder is not available. Check Goals &amp; Settings.</string>
 </resources>

@@ -147,8 +147,8 @@ Each phase ends with:
 - Tapping the date header picks another date.
 - **Ghost text:** a custom `BasicTextField` decoration that draws the grey ghost line remainder after each typed line, plus the Tab-to-accept behaviour.
 - **Edit and delete (new):**
-  - Long-press menu with Change date and Delete.
-  - Delete shows a snackbar with Undo.
+  - Pen icon on each saved entry's date header opens a menu with Change date and Delete.
+  - Delete asks for confirmation, then shows a snackbar with Undo.
   - Clearing an entry's text deletes it, with Undo.
   - Change date offers to merge when the target date already has an entry.
 - **Done when:** a manual test pass on a phone covers typing, autosave across app kill, search, month filter, ghost text, change date, delete and undo. UI tests cover delete with undo and search.

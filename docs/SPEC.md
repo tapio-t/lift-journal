@@ -43,8 +43,8 @@ In portrait the tabs are a bottom bar. In landscape they are a navigation rail o
 - Typing saves automatically about 500 ms after the last keystroke. It also saves when the field loses focus and when the app goes to the background.
 - Every entry can be edited in place.
 - Tapping the date of the top entry opens a date picker. This lets the user write an entry for a past day that has none.
-- *(new)* **Delete:** long-pressing an entry opens a menu with "Change date" and "Delete".
-  - Delete removes the entry and shows a snackbar "Entry deleted · Undo" for about 5 seconds.
+- *(new)* **Edit menu:** every saved entry has a pen icon at the right edge of its date header. Tapping it opens a menu with "Change date" and "Delete". (Owner decision: a visible pen replaces the long-press menu.)
+  - Delete first asks "Do you really want to delete journal entry?" with Delete and Cancel. Confirming removes the entry and shows a snackbar "Entry deleted · Undo" for about 5 seconds.
   - Clearing all of an entry's text also deletes it when the field loses focus, with the same Undo.
 - *(new)* **Change date** moves an entry to another date. If that date already has an entry, ask whether to merge: the moved text is appended below the existing text.
 - One entry per date. The date is the identity.

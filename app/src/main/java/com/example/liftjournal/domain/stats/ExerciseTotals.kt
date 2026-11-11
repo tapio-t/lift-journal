@@ -35,7 +35,6 @@ internal class ExerciseTotalsCollector(private val bodyweightKg: Double?) {
     /** Exercises with at least one weighted set, largest volume first (SPEC §5.1 exercise chips). */
     fun weightedByVolume(): List<ExerciseTotals> =
         byKey.values.filter { it.heaviestSetKg > 0 }.sortedByDescending { it.volumeKg }
-
 }
 
 /** Weights of the sets that count, skipping uncounted bodyweight sets and zero weights. */

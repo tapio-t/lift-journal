@@ -38,7 +38,9 @@ android {
 
     sourceSets {
         // Room's exported schemas are needed by migration tests.
-        getByName("androidTest").assets.srcDir("$projectDir/schemas")
+        getByName("androidTest").assets.directories.add("$projectDir/schemas")
+        // Golden parser cases and sample files are shared with the prototype in /testdata.
+        getByName("test").resources.directories.add("$rootDir/testdata")
     }
 
     lint {

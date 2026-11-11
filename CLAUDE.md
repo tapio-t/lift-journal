@@ -21,6 +21,21 @@ For every task:
 
 Ask instead of guessing when requirements are ambiguous. `docs/SPEC.md` and the prototype are the reference. If they disagree, ask.
 
+## Rule 2: human-readable code, no spaghetti code
+
+All code must be easy for a person to read and change. Follow the "Code quality" section of `docs/PLAN.md`. In short:
+
+- Keep layers clean: UI → ViewModel → repository → domain.
+- Keep functions small and single-purpose, and use descriptive names.
+- Use early returns instead of deep nesting.
+- Use named constants instead of magic numbers.
+- Don't duplicate logic or use global mutable state.
+- Write comments that explain *why*.
+- Keep formatting consistent with ktlint/detekt.
+- Leave no dead or commented-out code.
+- Port the prototype's behaviour, not its compact code style.
+- Each proposal says how the change keeps the code readable.
+
 ## Project
 
 Lift Journal is a minimal black-and-white fitness journal for Android. The user types sets as plain text, for example `deadlift 50 x 5, 5, 5`. The app calculates volume, top sets and goal progress.

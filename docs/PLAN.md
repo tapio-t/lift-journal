@@ -25,6 +25,37 @@ Every step below is proposed by Claude Code and approved by the owner before it 
 | Network | **No `INTERNET` permission.** No analytics, crash reporting or cloud SDKs | Local-only by design |
 | DI | Manual constructor injection via a small `AppContainer` | Hilt is unnecessary at this size; can be added later |
 
+## Code quality: human-readable, no spaghetti code
+
+All code must be easy for a person to read, follow and change. These rules apply to every phase and are part of each phase's definition of done.
+
+- **Clear structure.** Each layer has one job:
+  - UI (Compose screens) only displays state and forwards user actions.
+  - ViewModels hold screen state.
+  - The repository handles data.
+  - `domain/*` holds the rules and calculations.
+
+  No layer reaches past the one below it. For example, a screen never talks to Room directly.
+- **Small, single-purpose units.** A function does one thing and fits on a screen (aim for under about 40 lines). Files stay focused (aim for under about 300 lines). Split them when they grow.
+- **Descriptive names.** Name things for what they mean, e.g. `weeklyTopSet`, `effectiveWeightKg`, `isWorkout`. No cryptic abbreviations or single letters outside short lambdas.
+- **Readable logic.**
+  - Prefer early returns over deep nesting (at most 2–3 levels).
+  - No magic numbers. Name constants, e.g. `GHOST_LOOKBACK_DAYS = 56`, `LOAD_OFF_THRESHOLD = 0.8`.
+  - No duplicated logic: shared rules live in one place.
+  - No global mutable state.
+- **Explicit data flow.** State flows down and events flow up. Use immutable data classes for state, and no hidden side effects in composables.
+- **Comments explain *why*, not *what*.**
+  - Every public domain function gets a one-line KDoc.
+  - Non-obvious rules, such as the zoomed Top set scale or the parenthesis rule, get a short comment pointing to the relevant `SPEC.md` section.
+- **Consistent formatting.**
+  - Official Kotlin style, enforced with ktlint or detekt in the build/CI.
+  - No warnings left behind.
+  - No commented-out code or unused code. Delete it; git keeps history.
+- **Tests as documentation.** Test names describe behaviour, e.g. `parenthesised set is not recorded`. Every domain rule has a test.
+- **Review check.** Every proposal and pull request states how the change keeps these rules. Refactor while you're in the area rather than adding a workaround.
+
+The prototype is a single HTML file written for speed. Port its *behaviour*, not its code style: translate dense one-liners into clear, named Kotlin functions.
+
 Suggested package layout:
 
 ```
@@ -46,7 +77,13 @@ app/src/main/java/com/example/liftjournal/
 
 ## Phases
 
-Each phase ends with its acceptance checks passing, unit tests green, and a short demo note in the pull request.
+Each phase ends with:
+
+- its acceptance checks passing
+- unit tests green
+- lint and ktlint/detekt clean
+- the code-quality rules above met
+- a short demo note in the pull request
 
 ### Phase 0 — Project setup
 

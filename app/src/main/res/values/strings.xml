@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lift Journal</string>
+
+    <!-- Tabs -->
+    <string name="tab_journals">Journals</string>
+    <string name="tab_progress">Progress</string>
+    <string name="tab_settings">Goals &amp; Settings</string>
+</resources>

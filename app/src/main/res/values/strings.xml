@@ -241,6 +241,43 @@
     <string name="settings_not_a_backup">That file is not a Lift Journal backup</string>
     <string name="settings_file_unreadable">Could not open that file</string>
 
+    <string name="settings_section_import">Import from text file</string>
+    <string name="settings_import">Import from text file</string>
+    <string name="settings_import_hint">A line with only a date (9.11.2026, 2026-11-09, optionally after a weekday like Mon or ma) starts an entry. From Google Docs: File → Download → Plain text (.txt). Nothing is deleted.</string>
+    <string name="settings_import_title">Import this file?</string>
+    <string name="settings_import_dates">%1$s · %2$s – %3$s</string>
+    <plurals name="settings_import_entries">
+        <item quantity="one">%d entry</item>
+        <item quantity="other">%d entries</item>
+    </plurals>
+    <plurals name="settings_import_existing">
+        <item quantity="one">%1$d date already has an entry: %2$s</item>
+        <item quantity="other">%1$d dates already have an entry: %2$s</item>
+    </plurals>
+    <string name="settings_import_more_dates">%1$s and %2$d more</string>
+    <plurals name="settings_import_unreadable">
+        <item quantity="one">%d line or part isn\'t read as sets; it stays as a note.</item>
+        <item quantity="other">%d lines or parts aren\'t read as sets; they stay as notes.</item>
+    </plurals>
+    <plurals name="settings_import_ignored">
+        <item quantity="one">%1$d line before the first date is ignored: “%2$s”</item>
+        <item quantity="other">%1$d lines before the first date are ignored, starting with “%2$s”</item>
+    </plurals>
+    <string name="settings_import_existing_label">Dates that already have an entry</string>
+    <string name="settings_import_mode_append">Add below</string>
+    <string name="settings_import_mode_skip">Skip them</string>
+    <plurals name="settings_import_result_preview">
+        <item quantity="one">%d entry will be added or changed.</item>
+        <item quantity="other">%d entries will be added or changed.</item>
+    </plurals>
+    <string name="settings_import_confirm">Import</string>
+    <plurals name="settings_imported">
+        <item quantity="one">Imported %d entry</item>
+        <item quantity="other">Imported %d entries</item>
+    </plurals>
+    <string name="settings_import_nothing_new">Nothing new to import</string>
+    <string name="settings_import_no_dates">No date lines found in that file</string>
+
     <string name="settings_section_ghost">Journal ghost text</string>
     <string name="settings_on">On</string>
     <string name="settings_off">Off</string>

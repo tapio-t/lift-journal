@@ -21,6 +21,9 @@ import com.example.liftjournal.domain.format.parseKilograms
 import com.example.liftjournal.domain.goals.Goal
 import com.example.liftjournal.domain.goals.GoalPeriod
 import com.example.liftjournal.domain.goals.GoalType
+import com.example.liftjournal.domain.importer.ImportConflictMode
+import com.example.liftjournal.domain.importer.decodeImportBytes
+import com.example.liftjournal.domain.importer.parseImportText
 import com.example.liftjournal.domain.settings.ThemeMode
 import com.example.liftjournal.domain.time.TodayProvider
 import kotlinx.coroutines.Dispatchers
@@ -37,6 +40,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.IOException
 
 private const val STOP_TIMEOUT_MS = 5_000L
@@ -167,24 +171,54 @@ class SettingsViewModel(
     fun onRestoreFilePicked(file: Uri?) {
         if (file == null) return
         viewModelScope.launch {
-            val text = try {
-                documentFiles.readText(file)
-            } catch (_: IOException) {
-                null
-            } catch (_: SecurityException) {
-                null
-            }
-            if (text == null) {
-                events.send(SettingsEvent.FileUnreadable)
-                return@launch
-            }
-            val backup = readBackup(text)
+            val bytes = readFileOrNull(file) ?: return@launch
+            val backup = readBackup(bytes.toString(Charsets.UTF_8))
             if (backup == null) {
                 events.send(SettingsEvent.NotABackup)
                 return@launch
             }
             inputs.update { it.copy(dialog = SettingsDialog.ConfirmRestore(backup, backup.preview())) }
         }
+    }
+
+    /** The user picked a text file to import; it is split into entries and previewed (PLAN phase 7). */
+    fun onImportFilePicked(file: Uri?) {
+        if (file == null) return
+        viewModelScope.launch {
+            val bytes = readFileOrNull(file) ?: return@launch
+            val textImport = withContext(Dispatchers.Default) { parseImportText(decodeImportBytes(bytes)) }
+            if (textImport.entries.isEmpty()) {
+                events.send(SettingsEvent.NoDatesFound)
+                return@launch
+            }
+            inputs.update { it.copy(dialog = SettingsDialog.ConfirmImport(textImport, ImportConflictMode.APPEND)) }
+        }
+    }
+
+    fun onImportModeChanged(mode: ImportConflictMode) = inputs.update { current ->
+        val dialog = current.dialog as? SettingsDialog.ConfirmImport ?: return@update current
+        current.copy(dialog = dialog.copy(mode = mode))
+    }
+
+    fun onImportConfirmed(dialog: SettingsDialog.ConfirmImport) {
+        inputs.update { it.copy(dialog = null) }
+        viewModelScope.launch {
+            val plan = journalRepository.importEntries(dialog.textImport.entries, dialog.mode)
+            events.send(SettingsEvent.Imported(plan.entriesToWrite.size))
+        }
+    }
+
+    /** Reads a picked file; on failure tells the user and returns null. */
+    private suspend fun readFileOrNull(file: Uri): ByteArray? {
+        val bytes = try {
+            documentFiles.readBytes(file)
+        } catch (_: IOException) {
+            null
+        } catch (_: SecurityException) {
+            null
+        }
+        if (bytes == null) events.send(SettingsEvent.FileUnreadable)
+        return bytes
     }
 
     fun onRestoreConfirmed(backup: BackupData) {

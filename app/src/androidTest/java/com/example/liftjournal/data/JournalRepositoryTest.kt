@@ -7,6 +7,7 @@ import com.example.liftjournal.data.db.AppDatabase
 import com.example.liftjournal.domain.goals.Goal
 import com.example.liftjournal.domain.goals.GoalPeriod
 import com.example.liftjournal.domain.goals.GoalType
+import com.example.liftjournal.domain.importer.ImportConflictMode
 import com.example.liftjournal.domain.model.StoredEntry
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -119,6 +120,22 @@ class JournalRepositoryTest {
 
         assertEquals(listOf(StoredEntry(tuesday, "bench 60 x 5")), repository.snapshot().first)
         assertEquals(listOf(GoalType.AVERAGE_SET), repository.goals.first().map { it.type })
+    }
+
+    @Test
+    fun importAppendsOnceAndReimportChangesNothing() = runTest {
+        repository.saveEntry(monday, "felt tired")
+        val imported = listOf(StoredEntry(monday, "squat 100 x 5"), StoredEntry(tuesday, "bench 60 x 5"))
+
+        val first = repository.importEntries(imported, ImportConflictMode.APPEND)
+        val second = repository.importEntries(imported, ImportConflictMode.APPEND)
+
+        assertEquals(2, first.entriesToWrite.size)
+        assertTrue(second.entriesToWrite.isEmpty())
+        assertEquals(
+            listOf(StoredEntry(monday, "felt tired\nsquat 100 x 5"), StoredEntry(tuesday, "bench 60 x 5")),
+            repository.snapshot().first,
+        )
     }
 
     @Test

@@ -6,6 +6,9 @@ import com.example.liftjournal.domain.export.SpreadsheetFormat
 import com.example.liftjournal.domain.goals.Goal
 import com.example.liftjournal.domain.goals.GoalPeriod
 import com.example.liftjournal.domain.goals.GoalType
+import com.example.liftjournal.domain.importer.ImportConflictMode
+import com.example.liftjournal.domain.importer.ImportPreview
+import com.example.liftjournal.domain.importer.TextImport
 import com.example.liftjournal.domain.settings.ThemeMode
 import com.example.liftjournal.domain.stats.KnownExercise
 import com.example.liftjournal.ui.common.NamedGoal
@@ -23,6 +26,8 @@ data class SettingsUiState(
     val theme: ThemeMode = ThemeMode.SYSTEM,
     val backup: BackupFolderState = BackupFolderState(),
     val dialog: SettingsDialog? = null,
+    /** Shown while [dialog] is [SettingsDialog.ConfirmImport], recalculated against the current entries. */
+    val importPreview: ImportPreview? = null,
 ) {
     val hasEntries: Boolean get() = entryCount > 0
 
@@ -67,6 +72,9 @@ sealed interface SettingsDialog {
     data class ConfirmRestore(val backup: BackupData, val preview: RestorePreview) : SettingsDialog
 
     data object ConfirmErase : SettingsDialog
+
+    /** The import preview; [mode] can be switched before confirming. */
+    data class ConfirmImport(val textImport: TextImport, val mode: ImportConflictMode) : SettingsDialog
 }
 
 /** One-off messages, shown as snackbars. */
@@ -94,4 +102,9 @@ sealed interface SettingsEvent {
     data object DataErased : SettingsEvent
 
     data class BackupFinished(val outcome: BackupOutcome) : SettingsEvent
+
+    /** [changedEntries] is 0 when everything in the file was already there. */
+    data class Imported(val changedEntries: Int) : SettingsEvent
+
+    data object NoDatesFound : SettingsEvent
 }

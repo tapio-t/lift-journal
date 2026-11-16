@@ -7,6 +7,9 @@ import com.example.liftjournal.data.db.GoalEntity
 import com.example.liftjournal.domain.goals.Goal
 import com.example.liftjournal.domain.goals.GoalPeriod
 import com.example.liftjournal.domain.goals.GoalType
+import com.example.liftjournal.domain.importer.ImportConflictMode
+import com.example.liftjournal.domain.importer.ImportPlan
+import com.example.liftjournal.domain.importer.planImport
 import com.example.liftjournal.domain.journal.appendEntryText
 import com.example.liftjournal.domain.model.JournalEntry
 import com.example.liftjournal.domain.model.StoredEntry
@@ -114,6 +117,22 @@ class JournalRepository(
             goals.forEach { goalDao.insert(it.toEntity().copy(id = 0)) }
         }
         changeNotifier.notifyChanged()
+    }
+
+    /**
+     * Imports entries in one transaction (PLAN phase 7). The plan is worked out inside the transaction against
+     * the stored entries, so it can't overwrite a change made since the preview. Nothing is deleted.
+     */
+    suspend fun importEntries(imported: List<StoredEntry>, mode: ImportConflictMode): ImportPlan {
+        val plan = database.withTransaction {
+            val existing = entryDao.getAll().mapNotNull { it.toStored() }.associate { it.date to it.text }
+            val plan = planImport(imported, existing, mode)
+            val now = currentTimeMillis()
+            entryDao.upsertAll(plan.entriesToWrite.map { EntryEntity(it.date.toStorageString(), it.text, now) })
+            plan
+        }
+        if (plan.entriesToWrite.isNotEmpty()) changeNotifier.notifyChanged()
+        return plan
     }
 
     /** Entries and goals as stored, for backups and export. */

@@ -11,6 +11,7 @@ import com.example.liftjournal.R
 import com.example.liftjournal.backup.BackupOutcome
 import com.example.liftjournal.domain.format.formatDayMonthYear
 import com.example.liftjournal.domain.format.formatWeight
+import com.example.liftjournal.domain.importer.ImportPreview
 import com.example.liftjournal.ui.common.ConfirmDialog
 import com.example.liftjournal.ui.common.showForAction
 
@@ -45,6 +46,12 @@ private fun Resources.message(event: SettingsEvent): String = when (event) {
     SettingsEvent.NotABackup -> getString(R.string.settings_not_a_backup)
     SettingsEvent.FileUnreadable -> getString(R.string.settings_file_unreadable)
     SettingsEvent.DataErased -> getString(R.string.settings_erased)
+    is SettingsEvent.Imported -> if (event.changedEntries == 0) {
+        getString(R.string.settings_import_nothing_new)
+    } else {
+        getQuantityString(R.plurals.settings_imported, event.changedEntries, event.changedEntries)
+    }
+    SettingsEvent.NoDatesFound -> getString(R.string.settings_import_no_dates)
     is SettingsEvent.BackupFinished -> getString(
         when (event.outcome) {
             BackupOutcome.SUCCESS -> R.string.settings_backed_up
@@ -56,8 +63,17 @@ private fun Resources.message(event: SettingsEvent): String = when (event) {
 }
 
 @Composable
-fun SettingsDialogs(dialog: SettingsDialog?, viewModel: SettingsViewModel) {
+fun SettingsDialogs(dialog: SettingsDialog?, importPreview: ImportPreview?, viewModel: SettingsViewModel) {
     when (dialog) {
+        is SettingsDialog.ConfirmImport -> if (importPreview != null) {
+            ImportPreviewDialog(
+                preview = importPreview,
+                mode = dialog.mode,
+                onModeChange = viewModel::onImportModeChanged,
+                onConfirm = { viewModel.onImportConfirmed(dialog) },
+                onDismiss = viewModel::onDialogDismissed,
+            )
+        }
         null -> Unit
         is SettingsDialog.ConfirmRestore -> ConfirmDialog(
             title = stringResource(R.string.settings_restore_title),

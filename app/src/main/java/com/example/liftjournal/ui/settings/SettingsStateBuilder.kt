@@ -4,6 +4,8 @@ import com.example.liftjournal.domain.goals.Goal
 import com.example.liftjournal.domain.goals.goalPercent
 import com.example.liftjournal.domain.goals.goalProgress
 import com.example.liftjournal.domain.goals.suggestedTarget
+import com.example.liftjournal.domain.importer.ImportPreview
+import com.example.liftjournal.domain.importer.previewImport
 import com.example.liftjournal.domain.model.JournalEntry
 import com.example.liftjournal.domain.settings.AppSettings
 import com.example.liftjournal.domain.settings.BackupStatus
@@ -33,7 +35,13 @@ internal fun buildSettingsState(
         theme = user.theme,
         backup = backupFolderState(settings.backup, backupFolderName),
         dialog = inputs.dialog,
+        importPreview = importPreview(inputs.dialog, entries),
     )
+}
+
+private fun importPreview(dialog: SettingsDialog?, entries: List<JournalEntry>): ImportPreview? {
+    if (dialog !is SettingsDialog.ConfirmImport) return null
+    return previewImport(dialog.textImport, entries.associate { it.date to it.text }, dialog.mode)
 }
 
 private fun backupFolderState(status: BackupStatus, folderName: String?): BackupFolderState {

@@ -2,6 +2,7 @@ package com.example.liftjournal.domain.format
 
 import com.example.liftjournal.domain.date
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 import java.time.YearMonth
 
@@ -50,5 +51,22 @@ class FormatTest {
     fun `month tag is short month and year`() {
         assertEquals("Nov 2026", formatMonthTag(YearMonth.of(2026, 11)))
         assertEquals("Sep 2026", formatMonthTag(YearMonth.of(2026, 9)))
+    }
+
+    @Test
+    fun `typed kilograms accept a dot or a comma and must be positive`() {
+        assertEquals(72.5, parseKilograms(" 72.5 ")!!, 0.0)
+        assertEquals(72.5, parseKilograms("72,5")!!, 0.0)
+        assertNull(parseKilograms(""))
+        assertNull(parseKilograms("0"))
+        assertNull(parseKilograms("-5"))
+        assertNull(parseKilograms("abc"))
+    }
+
+    @Test
+    fun `plain numbers have no trailing zeros or exponent`() {
+        assertEquals("250", formatPlainNumber(250.0))
+        assertEquals("82.5", formatPlainNumber(82.5))
+        assertEquals("25000", formatPlainNumber(25_000.0))
     }
 }

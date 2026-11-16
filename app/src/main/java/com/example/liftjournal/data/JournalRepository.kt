@@ -9,14 +9,12 @@ import com.example.liftjournal.domain.goals.GoalPeriod
 import com.example.liftjournal.domain.goals.GoalType
 import com.example.liftjournal.domain.journal.appendEntryText
 import com.example.liftjournal.domain.model.JournalEntry
+import com.example.liftjournal.domain.model.StoredEntry
 import com.example.liftjournal.domain.time.parseStorageDate
 import com.example.liftjournal.domain.time.toStorageString
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.LocalDate
-
-/** A journal entry's date and text as stored, without parsing. */
-data class StoredEntry(val date: LocalDate, val text: String)
 
 /** Entries and goals. Every committed change is reported to [changeNotifier] for real-time backup. */
 class JournalRepository(
@@ -94,6 +92,27 @@ class JournalRepository(
 
     suspend fun removeGoal(id: Long) {
         goalDao.delete(id)
+        changeNotifier.notifyChanged()
+    }
+
+    /** Undoes a goal removal. The goal keeps its id, so it returns to its place in the list. */
+    suspend fun restoreGoal(goal: Goal) {
+        goalDao.insert(goal.toEntity())
+        changeNotifier.notifyChanged()
+    }
+
+    /**
+     * Replaces every entry and goal in one transaction (restore from backup, erase all data), so a failure
+     * leaves the old data untouched. Goals get new ids in the given order.
+     */
+    suspend fun replaceAll(entries: List<StoredEntry>, goals: List<Goal>) {
+        database.withTransaction {
+            entryDao.deleteAll()
+            goalDao.deleteAll()
+            val now = currentTimeMillis()
+            entryDao.upsertAll(entries.map { EntryEntity(it.date.toStorageString(), it.text, now) })
+            goals.forEach { goalDao.insert(it.toEntity().copy(id = 0)) }
+        }
         changeNotifier.notifyChanged()
     }
 

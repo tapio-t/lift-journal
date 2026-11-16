@@ -156,4 +156,106 @@
     <string name="goal_short_average">%1$s avg set</string>
     <string name="goal_short_volume">Volume / %1$s</string>
     <string name="goal_short_exercise_volume">%1$s vol / %2$s</string>
+
+    <!-- Goals & Settings. <b> marks an emphasised value, as in Progress. -->
+    <string name="settings_title">Goals &amp; Settings</string>
+    <string name="settings_summary">%1$s · %2$s</string>
+    <plurals name="settings_entries">
+        <item quantity="one">%d journal entry</item>
+        <item quantity="other">%d journal entries</item>
+    </plurals>
+    <plurals name="settings_logged_workouts">
+        <item quantity="one">%d logged workout</item>
+        <item quantity="other">%d logged workouts</item>
+    </plurals>
+
+    <string name="settings_section_goals">Goals</string>
+    <string name="settings_goal_now"><![CDATA[Now %1$s · <b>%2$d%%</b> of goal]]></string>
+    <string name="settings_goal_remove">Remove goal %1$s</string>
+    <string name="settings_goals_shown_in_progress"><![CDATA[Shown in Progress under the <b>Goal</b> tag.]]></string>
+    <string name="settings_goal_type">Goal</string>
+    <string name="settings_goal_type_top">Top set weight</string>
+    <string name="settings_goal_type_average">Average set weight</string>
+    <string name="settings_goal_type_volume">Total volume</string>
+    <string name="settings_goal_type_exercise_volume">Exercise volume</string>
+    <string name="settings_goal_exercise">Exercise</string>
+    <string name="settings_goal_no_exercises">Log an exercise in Journals first.</string>
+    <string name="settings_goal_period">Period</string>
+    <string name="settings_goal_per_week">Per week</string>
+    <string name="settings_goal_per_month">Per month</string>
+    <string name="settings_goal_target">Target (kg)</string>
+    <string name="settings_goal_target_suggestion">e.g. %1$s</string>
+    <string name="settings_goal_target_placeholder">kg</string>
+    <string name="settings_goal_set">Set goal</string>
+    <string name="settings_goal_added">Goal set · see Progress → Goal</string>
+    <string name="settings_goal_removed">Goal removed</string>
+    <string name="settings_goal_enter_target">Enter a target in kg</string>
+
+    <string name="settings_section_bodyweight">Bodyweight</string>
+    <string name="settings_bodyweight_placeholder">e.g. 80</string>
+    <string name="settings_bodyweight_label">Bodyweight in kg</string>
+    <string name="settings_kg">kg</string>
+    <string name="settings_bodyweight_hint">Used for sets written as pull-up bw x 8 or push-up 0.5 bw x 20. Until it\'s set, those sets are left out of Progress and goals.</string>
+    <string name="settings_bodyweight_saved">Bodyweight %1$s kg saved</string>
+    <string name="settings_bodyweight_cleared">Bodyweight cleared</string>
+
+    <string name="settings_section_spreadsheet">Spreadsheet</string>
+    <string name="settings_export_xlsx">Export .xlsx</string>
+    <string name="settings_export_ods">Export .ods</string>
+    <string name="settings_export_hint">Sheets: Sets, Daily volume, Weekly volume, Monthly volume, Monthly total, Journal text. Volume = weight × reps.</string>
+    <string name="settings_exported">Exported .%1$s</string>
+    <string name="settings_export_failed">Could not save the spreadsheet</string>
+
+    <string name="settings_section_restore">Restore from backup</string>
+    <string name="settings_restore">Restore from backup</string>
+    <string name="settings_restore_hint">Pick a Lift Journal backup (.json), including one saved from the prototype. You\'ll see what it contains before anything is replaced.</string>
+    <string name="settings_restore_title">Restore this backup?</string>
+    <string name="settings_restore_preview">%1$s\n%2$s\n%3$s\n\nAll current entries, goals and settings will be replaced.</string>
+    <string name="settings_restore_dates">%1$s – %2$s</string>
+    <string name="settings_restore_no_dates">No dates</string>
+    <string name="settings_restore_bodyweight">%1$s · bodyweight %2$s kg</string>
+    <string name="settings_restore_no_bodyweight">%1$s · no bodyweight</string>
+    <plurals name="settings_restore_goals">
+        <item quantity="one">%d goal</item>
+        <item quantity="other">%d goals</item>
+    </plurals>
+    <string name="settings_restore_confirm">Replace all data</string>
+    <string name="settings_restored">Backup restored</string>
+    <string name="settings_not_a_backup">That file is not a Lift Journal backup</string>
+    <string name="settings_file_unreadable">Could not open that file</string>
+
+    <string name="settings_section_ghost">Journal ghost text</string>
+    <string name="settings_on">On</string>
+    <string name="settings_off">Off</string>
+    <string name="settings_ghost_hint">Shows last week\'s entry for the same weekday in grey in today\'s entry. Type over it; on a keyboard, Tab fills in the rest of a line.</string>
+
+    <string name="settings_section_appearance">Appearance (Progress &amp; Settings)</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+
+    <string name="settings_section_entry_format">Entry format</string>
+    <string-array name="settings_entry_format_examples" translatable="false">
+        <item>deadlift 50 x 5</item>
+        <item>deadlift 50 x 5, 5, 5</item>
+        <item>squat 100 x 5, 5, 110 x 3</item>
+        <item>squat (60 x 10), 100 x 5</item>
+        <item>pull-up bw x 8, 8</item>
+        <item>push-up 0.5 bw x 20</item>
+    </string-array>
+    <string-array name="settings_entry_format_meanings">
+        <item>→ 250 kg</item>
+        <item>→ 750 kg</item>
+        <item>→ weight change</item>
+        <item>→ set in ( ) not recorded</item>
+        <item>→ bodyweight × 8</item>
+        <item>→ half bodyweight × 20</item>
+    </string-array>
+    <string name="settings_entry_format_note">One exercise per line. “kg” optional. Decimals with a dot: 72.5.</string>
+
+    <string name="settings_section_reset">Reset</string>
+    <string name="settings_erase">Erase all data</string>
+    <string name="settings_erase_question">Erase all journal entries, goals and bodyweight on this device? This can\'t be undone.</string>
+    <string name="settings_erase_confirm">Erase</string>
+    <string name="settings_erased">All data erased</string>
 </resources>

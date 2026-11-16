@@ -38,6 +38,13 @@ class SettingsRepository(
         editUserSettings { it.putOrRemove(Keys.BODYWEIGHT_KG, validKg) }
     }
 
+    /** Replaces all of the user's settings at once, e.g. from a backup. Backup bookkeeping is kept. */
+    suspend fun replaceUserSettings(settings: UserSettings) = editUserSettings {
+        it[Keys.THEME] = settings.theme.storageKey
+        it[Keys.GHOST_TEXT] = settings.ghostText
+        it.putOrRemove(Keys.BODYWEIGHT_KG, settings.bodyweightKg?.takeIf { kg -> kg > 0 })
+    }
+
     suspend fun setBackupFolder(uri: String?) {
         dataStore.edit {
             it.putOrRemove(Keys.BACKUP_FOLDER_URI, uri)

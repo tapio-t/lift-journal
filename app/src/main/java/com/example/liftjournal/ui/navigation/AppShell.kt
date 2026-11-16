@@ -11,13 +11,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.liftjournal.domain.settings.ThemeMode
 import com.example.liftjournal.ui.journals.JournalsScreen
 import com.example.liftjournal.ui.progress.ProgressScreen
 import com.example.liftjournal.ui.settings.SettingsScreen
@@ -28,12 +29,13 @@ import com.example.liftjournal.ui.theme.paletteFor
 
 /** Root of the UI: the three tabs with a bottom bar in portrait and a rail in landscape. */
 @Composable
-fun AppShell() {
+fun AppShell(viewModel: AppShellViewModel = viewModel(factory = AppShellViewModel.Factory)) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val current = Destination.fromRoute(backStackEntry?.destination?.route)
+    val themeMode by viewModel.themeMode.collectAsStateWithLifecycle()
     // Journals is always black; the other tabs follow the appearance setting (SPEC §1).
-    val palette = if (current == Destination.JOURNALS) JournalsPalette else paletteFor(ThemeMode.SYSTEM)
+    val palette = if (current == Destination.JOURNALS) JournalsPalette else paletteFor(themeMode)
     val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
     val onSelect: (Destination) -> Unit = { navController.navigateToTab(it) }
 

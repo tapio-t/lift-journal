@@ -7,6 +7,7 @@ import com.example.liftjournal.data.db.AppDatabase
 import com.example.liftjournal.domain.goals.Goal
 import com.example.liftjournal.domain.goals.GoalPeriod
 import com.example.liftjournal.domain.goals.GoalType
+import com.example.liftjournal.domain.model.StoredEntry
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -92,6 +93,32 @@ class JournalRepositoryTest {
         assertEquals(listOf(GoalType.TOP_SET, GoalType.TOTAL_VOLUME), repository.goals.first().map { it.type })
         repository.removeGoal(first)
         assertEquals(listOf(GoalType.TOTAL_VOLUME), repository.goals.first().map { it.type })
+    }
+
+    @Test
+    fun restoredGoalReturnsToItsPlace() = runTest {
+        val first = repository.addGoal(Goal(0, GoalType.TOP_SET, "squat", null, 160.0))
+        repository.addGoal(Goal(0, GoalType.TOTAL_VOLUME, null, GoalPeriod.WEEK, 20_000.0))
+        val removed = repository.goals.first().first()
+
+        repository.removeGoal(first)
+        repository.restoreGoal(removed)
+
+        assertEquals(listOf(GoalType.TOP_SET, GoalType.TOTAL_VOLUME), repository.goals.first().map { it.type })
+    }
+
+    @Test
+    fun replaceAllSwapsEveryEntryAndGoal() = runTest {
+        repository.saveEntry(monday, "squat 100 x 5")
+        repository.addGoal(Goal(0, GoalType.TOP_SET, "squat", null, 160.0))
+
+        repository.replaceAll(
+            entries = listOf(StoredEntry(tuesday, "bench 60 x 5")),
+            goals = listOf(Goal(0, GoalType.AVERAGE_SET, "bench", null, 70.0)),
+        )
+
+        assertEquals(listOf(StoredEntry(tuesday, "bench 60 x 5")), repository.snapshot().first)
+        assertEquals(listOf(GoalType.AVERAGE_SET), repository.goals.first().map { it.type })
     }
 
     @Test

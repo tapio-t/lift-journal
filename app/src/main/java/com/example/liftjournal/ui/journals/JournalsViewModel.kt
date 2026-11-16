@@ -10,11 +10,11 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.liftjournal.appContainer
 import com.example.liftjournal.data.JournalRepository
 import com.example.liftjournal.data.SettingsRepository
-import com.example.liftjournal.data.StoredEntry
 import com.example.liftjournal.domain.journal.ghostLinesFor
 import com.example.liftjournal.domain.journal.monthsWithEntries
 import com.example.liftjournal.domain.journal.searchEntries
 import com.example.liftjournal.domain.model.JournalEntry
+import com.example.liftjournal.domain.model.StoredEntry
 import com.example.liftjournal.domain.settings.AppSettings
 import com.example.liftjournal.domain.time.TodayProvider
 import com.example.liftjournal.domain.time.parseStorageDate

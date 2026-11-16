@@ -1,6 +1,6 @@
 package com.example.liftjournal.ui.journals
 
-import com.example.liftjournal.data.StoredEntry
+import com.example.liftjournal.domain.model.StoredEntry
 import java.time.LocalDate
 import java.time.YearMonth
 

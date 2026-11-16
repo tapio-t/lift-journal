@@ -37,3 +37,12 @@ fun roundToOneDecimal(value: Double): Double = (value * 10).roundToLong() / 10.0
 
 private fun oneDecimal(value: Double): String =
     BigDecimal.valueOf(value).setScale(1, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()
+
+/** `250`, `82.5`, `0.5`: the shortest plain form of a number, as JavaScript prints it (no `.0`, no exponent). */
+fun formatPlainNumber(value: Double): String = BigDecimal.valueOf(value).stripTrailingZeros().toPlainString()
+
+/** Reads a typed weight such as `80`, `72.5` or `72,5`; null for anything that isn't a positive number. */
+fun parseKilograms(text: String): Double? = text.trim().replace(',', '.').toDoubleOrNull()?.takeIf {
+    it > 0 &&
+        it.isFinite()
+}

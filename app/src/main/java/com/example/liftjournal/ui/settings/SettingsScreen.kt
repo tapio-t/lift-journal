@@ -1,8 +1,11 @@
 package com.example.liftjournal.ui.settings
 
+import android.net.Uri
+import android.provider.DocumentsContract
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.activity.result.contract.ActivityResultContracts.OpenDocument
+import androidx.activity.result.contract.ActivityResultContracts.OpenDocumentTree
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +29,8 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.liftjournal.R
@@ -42,6 +47,10 @@ private val PageTitleText = AppText.pageTitle.copy(fontSize = 28.sp)
 /** Backups are JSON; some file providers report them as plain text or generic binary. */
 private val BACKUP_MIME_TYPES = arrayOf("application/json", "text/plain", "application/octet-stream")
 
+/** The folder picker starts in Documents, where we suggest creating a LiftJournal folder (PLAN phase 6). */
+private val DOCUMENTS_FOLDER: Uri =
+    DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", "primary:Documents")
+
 /** Goals & Settings tab (SPEC §6). Follows the appearance setting, like Progress. */
 @Composable
 fun SettingsScreen(viewModel: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory)) {
@@ -56,10 +65,16 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel(factory = SettingsVi
         viewModel.onExportDestinationPicked(SpreadsheetFormat.ODS, it)
     }
     val pickBackup = rememberLauncherForActivityResult(OpenDocument(), viewModel::onRestoreFilePicked)
-    val onExport: (SpreadsheetFormat) -> Unit = { format ->
-        val launcher = if (format == SpreadsheetFormat.XLSX) exportXlsx else exportOds
-        launcher.launch(format.fileName(state.today))
-    }
+    val pickBackupFolder = rememberLauncherForActivityResult(OpenDocumentTree(), viewModel::onBackupFolderPicked)
+    val pickers = FilePickers(
+        export = { format ->
+            val launcher = if (format == SpreadsheetFormat.XLSX) exportXlsx else exportOds
+            launcher.launch(format.fileName(state.today))
+        },
+        restore = { pickBackup.launch(BACKUP_MIME_TYPES) },
+        chooseBackupFolder = { pickBackupFolder.launch(DOCUMENTS_FOLDER) },
+    )
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.onScreenResumed() }
 
     Box(Modifier.fillMaxSize().imePadding()) {
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
@@ -70,7 +85,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel(factory = SettingsVi
                     .fillMaxWidth()
                     .padding(horizontal = PageGutter, vertical = PageTopGap),
             ) {
-                SettingsContent(state, viewModel, onExport, onRestore = { pickBackup.launch(BACKUP_MIME_TYPES) })
+                SettingsContent(state, viewModel, pickers)
             }
         }
         SnackbarHost(snackbarHostState, Modifier.align(Alignment.BottomCenter))
@@ -78,14 +93,16 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel(factory = SettingsVi
     SettingsDialogs(state.dialog, viewModel)
 }
 
-/** The sections in the order of SPEC §6. Backup folder (phase 6) and text import (phase 7) slot in later. */
+/** Opens the system file pickers; each result goes to the view model. */
+private class FilePickers(
+    val export: (SpreadsheetFormat) -> Unit,
+    val restore: () -> Unit,
+    val chooseBackupFolder: () -> Unit,
+)
+
+/** The sections in the order of SPEC §6. Text import (phase 7) slots in after restore. */
 @Composable
-private fun SettingsContent(
-    state: SettingsUiState,
-    viewModel: SettingsViewModel,
-    onExport: (SpreadsheetFormat) -> Unit,
-    onRestore: () -> Unit,
-) {
+private fun SettingsContent(state: SettingsUiState, viewModel: SettingsViewModel, pickers: FilePickers) {
     PageHeader(state)
     SectionHeader(stringResource(R.string.settings_section_goals))
     GoalsSection(
@@ -101,8 +118,9 @@ private fun SettingsContent(
         ),
     )
     BodyweightSection(state.bodyweightKg, viewModel::onBodyweightEntered)
-    SpreadsheetSection(state.hasEntries, onExport)
-    RestoreSection(onRestore)
+    BackupFolderSection(state.backup, state.today, pickers.chooseBackupFolder, viewModel::onBackUpNowClicked)
+    SpreadsheetSection(state.hasEntries, pickers.export)
+    RestoreSection(pickers.restore)
     GhostTextSection(state.ghostText, viewModel::onGhostTextChanged)
     AppearanceSection(state.theme, viewModel::onThemeChanged)
     EntryFormatSection()

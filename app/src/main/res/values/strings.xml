@@ -199,6 +199,23 @@
     <string name="settings_bodyweight_saved">Bodyweight %1$s kg saved</string>
     <string name="settings_bodyweight_cleared">Bodyweight cleared</string>
 
+    <string name="settings_section_backup_folder">Backup folder</string>
+    <string name="settings_backup_not_set">Every change is saved to a folder you choose as lift-journal-backup.json, plus a daily copy for the last 14 days. Tip: create a folder named LiftJournal in Documents and choose it.</string>
+    <string name="settings_backup_folder">Folder: %1$s</string>
+    <string name="settings_backup_folder_unnamed">Folder chosen</string>
+    <string name="settings_backup_last_today">Last backup: today %1$s</string>
+    <string name="settings_backup_last_yesterday">Last backup: yesterday %1$s</string>
+    <string name="settings_backup_last_date">Last backup: %1$s %2$s</string>
+    <string name="settings_backup_none_yet">No backup yet</string>
+    <string name="settings_backup_problem">The backup folder can\'t be reached. Choose it again, or pick another folder.</string>
+    <string name="settings_backup_choose">Choose folder</string>
+    <string name="settings_backup_now">Back up now</string>
+    <string name="settings_backup_cloud_hint">A cloud copy needs a folder that another app keeps in sync. Lift Journal itself never goes online.</string>
+    <string name="settings_backed_up">Backed up</string>
+    <string name="settings_backup_no_folder">Choose a backup folder first</string>
+    <string name="settings_backup_unavailable">The backup folder can\'t be reached</string>
+    <string name="settings_backup_failed">Backup failed. It will be tried again on the next change.</string>
+
     <string name="settings_section_spreadsheet">Spreadsheet</string>
     <string name="settings_export_xlsx">Export .xlsx</string>
     <string name="settings_export_ods">Export .ods</string>
@@ -208,7 +225,7 @@
 
     <string name="settings_section_restore">Restore from backup</string>
     <string name="settings_restore">Restore from backup</string>
-    <string name="settings_restore_hint">Pick a Lift Journal backup (.json), including one saved from the prototype. You\'ll see what it contains before anything is replaced.</string>
+    <string name="settings_restore_hint">Pick a Lift Journal backup (.json), including one saved from the prototype. Your real-time backup is lift-journal-backup.json in the backup folder. You\'ll see what it contains before anything is replaced.</string>
     <string name="settings_restore_title">Restore this backup?</string>
     <string name="settings_restore_preview">%1$s\n%2$s\n%3$s\n\nAll current entries, goals and settings will be replaced.</string>
     <string name="settings_restore_dates">%1$s – %2$s</string>

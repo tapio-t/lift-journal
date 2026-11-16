@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.example.liftjournal.R
+import com.example.liftjournal.backup.BackupOutcome
 import com.example.liftjournal.domain.format.formatDayMonthYear
 import com.example.liftjournal.domain.format.formatWeight
 import com.example.liftjournal.ui.common.ConfirmDialog
@@ -44,6 +45,14 @@ private fun Resources.message(event: SettingsEvent): String = when (event) {
     SettingsEvent.NotABackup -> getString(R.string.settings_not_a_backup)
     SettingsEvent.FileUnreadable -> getString(R.string.settings_file_unreadable)
     SettingsEvent.DataErased -> getString(R.string.settings_erased)
+    is SettingsEvent.BackupFinished -> getString(
+        when (event.outcome) {
+            BackupOutcome.SUCCESS -> R.string.settings_backed_up
+            BackupOutcome.NO_FOLDER -> R.string.settings_backup_no_folder
+            BackupOutcome.FOLDER_UNAVAILABLE -> R.string.settings_backup_unavailable
+            BackupOutcome.WRITE_FAILED -> R.string.settings_backup_failed
+        },
+    )
 }
 
 @Composable

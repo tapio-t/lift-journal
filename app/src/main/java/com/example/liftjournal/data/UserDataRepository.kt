@@ -8,6 +8,12 @@ class UserDataRepository(
     private val journalRepository: JournalRepository,
     private val settingsRepository: SettingsRepository,
 ) {
+    /** All current data, as it goes into a backup. */
+    suspend fun currentBackup(): BackupData {
+        val (entries, goals) = journalRepository.snapshot()
+        return BackupData(entries, goals, settingsRepository.current().user)
+    }
+
     /** Replaces all current data with a backup's (SPEC §6 "Restore from backup"). */
     suspend fun restore(backup: BackupData) {
         journalRepository.replaceAll(backup.entries, backup.goals)

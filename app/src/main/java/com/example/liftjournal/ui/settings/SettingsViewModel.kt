@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.liftjournal.appContainer
+import com.example.liftjournal.backup.BackupOutcome
+import com.example.liftjournal.backup.RealtimeBackupManager
 import com.example.liftjournal.data.DocumentFiles
 import com.example.liftjournal.data.JournalRepository
 import com.example.liftjournal.data.SettingsRepository
@@ -28,7 +30,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -53,19 +57,27 @@ class SettingsViewModel(
     private val userDataRepository: UserDataRepository,
     private val spreadsheetExporter: SpreadsheetExporter,
     private val documentFiles: DocumentFiles,
+    private val backupManager: RealtimeBackupManager,
     private val todayProvider: TodayProvider,
 ) : ViewModel() {
     private val inputs = MutableStateFlow(SettingsInputs())
     private val events = Channel<SettingsEvent>(Channel.BUFFERED)
 
+    /** The backup folder's display name is looked up from its provider only when the folder changes. */
+    private val backupFolderName: Flow<String?> = settingsRepository.settings
+        .map { it.backup.folderUri }
+        .distinctUntilChanged()
+        .map { uri -> uri?.let { backupManager.folderName(it) } }
+
     val uiState: StateFlow<SettingsUiState> =
-        combine(journalRepository.entries, journalRepository.goals, settingsRepository.settings, inputs) {
-                entries,
-                goals,
-                settings,
-                inputs,
-            ->
-            buildSettingsState(entries, goals, settings.user, inputs, todayProvider.today())
+        combine(
+            journalRepository.entries,
+            journalRepository.goals,
+            settingsRepository.settings,
+            backupFolderName,
+            inputs,
+        ) { entries, goals, settings, folderName, inputs ->
+            buildSettingsState(entries, goals, settings, inputs, todayProvider.today(), folderName)
         }
             .flowOn(Dispatchers.Default)
             .stateIn(
@@ -183,6 +195,28 @@ class SettingsViewModel(
         }
     }
 
+    /** The user picked a backup folder; a null [folder] means they cancelled. */
+    fun onBackupFolderPicked(folder: Uri?) {
+        if (folder == null) return
+        viewModelScope.launch {
+            val outcome = try {
+                backupManager.useFolder(folder)
+            } catch (_: SecurityException) {
+                BackupOutcome.FOLDER_UNAVAILABLE
+            }
+            events.send(SettingsEvent.BackupFinished(outcome))
+        }
+    }
+
+    fun onBackUpNowClicked() {
+        viewModelScope.launch { events.send(SettingsEvent.BackupFinished(backupManager.backUpNow())) }
+    }
+
+    /** Coming back to the screen re-checks the folder, e.g. after the user deleted it in a file manager. */
+    fun onScreenResumed() {
+        viewModelScope.launch { backupManager.checkFolderAccess() }
+    }
+
     fun onEraseClicked() = inputs.update { it.copy(dialog = SettingsDialog.ConfirmErase) }
 
     fun onEraseConfirmed() {
@@ -205,6 +239,7 @@ class SettingsViewModel(
                     userDataRepository = container.userDataRepository,
                     spreadsheetExporter = container.spreadsheetExporter,
                     documentFiles = container.documentFiles,
+                    backupManager = container.backupManager,
                     todayProvider = container.todayProvider,
                 )
             }

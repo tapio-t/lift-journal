@@ -3,6 +3,7 @@ package com.example.liftjournal
 import android.content.Context
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.example.liftjournal.backup.RealtimeBackupManager
 import com.example.liftjournal.data.DataChangeNotifier
 import com.example.liftjournal.data.DocumentFiles
 import com.example.liftjournal.data.JournalRepository
@@ -35,6 +36,14 @@ class AppContainer(context: Context) {
     val documentFiles = DocumentFiles(appContext.contentResolver)
 
     val spreadsheetExporter = SpreadsheetExporter(journalRepository, settingsRepository, documentFiles)
+
+    val backupManager = RealtimeBackupManager(
+        context = appContext,
+        userDataRepository = userDataRepository,
+        settingsRepository = settingsRepository,
+        changeNotifier = changeNotifier,
+        todayProvider = todayProvider,
+    )
 
     private companion object {
         const val SETTINGS_FILE = "settings"

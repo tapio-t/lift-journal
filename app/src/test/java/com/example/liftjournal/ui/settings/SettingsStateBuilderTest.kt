@@ -4,7 +4,8 @@ import com.example.liftjournal.domain.date
 import com.example.liftjournal.domain.entry
 import com.example.liftjournal.domain.goals.Goal
 import com.example.liftjournal.domain.goals.GoalType
-import com.example.liftjournal.domain.settings.UserSettings
+import com.example.liftjournal.domain.settings.AppSettings
+import com.example.liftjournal.domain.settings.BackupStatus
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -18,7 +19,7 @@ class SettingsStateBuilderTest {
     )
 
     private fun state(inputs: SettingsInputs = SettingsInputs(), goals: List<Goal> = emptyList()) =
-        buildSettingsState(entries, goals, UserSettings(), inputs, today)
+        buildSettingsState(entries, goals, AppSettings(), inputs, today)
 
     @Test
     fun `counts entries and workouts`() {
@@ -43,9 +44,18 @@ class SettingsStateBuilderTest {
 
     @Test
     fun `exercise goals cannot be set before anything is logged`() {
-        val form = buildSettingsState(emptyList(), emptyList(), UserSettings(), SettingsInputs(), today).goalForm
+        val form = buildSettingsState(emptyList(), emptyList(), AppSettings(), SettingsInputs(), today).goalForm
         assertNull(form.exerciseKey)
         assertFalse(form.canSubmit)
+    }
+
+    @Test
+    fun `backup folder state is empty until a folder is chosen`() {
+        assertEquals(BackupFolderState(), state().backup)
+
+        val settings = AppSettings(backup = BackupStatus("content://tree/1", 1_000L, hasProblem = true))
+        val backup = buildSettingsState(entries, emptyList(), settings, SettingsInputs(), today, "LiftJournal").backup
+        assertEquals(BackupFolderState(true, "LiftJournal", 1_000L, hasProblem = true), backup)
     }
 
     @Test

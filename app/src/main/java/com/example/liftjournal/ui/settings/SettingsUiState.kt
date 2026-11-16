@@ -1,5 +1,6 @@
 package com.example.liftjournal.ui.settings
 
+import com.example.liftjournal.backup.BackupOutcome
 import com.example.liftjournal.domain.backup.BackupData
 import com.example.liftjournal.domain.export.SpreadsheetFormat
 import com.example.liftjournal.domain.goals.Goal
@@ -20,6 +21,7 @@ data class SettingsUiState(
     val bodyweightKg: Double? = null,
     val ghostText: Boolean = true,
     val theme: ThemeMode = ThemeMode.SYSTEM,
+    val backup: BackupFolderState = BackupFolderState(),
     val dialog: SettingsDialog? = null,
 ) {
     val hasEntries: Boolean get() = entryCount > 0
@@ -43,6 +45,14 @@ data class GoalForm(
     /** A goal about one exercise can't be set before any exercise is logged. */
     val canSubmit: Boolean get() = !type.needsExercise || exerciseKey != null
 }
+
+/** The real-time backup folder (PLAN phase 6). [folderName] is null when the provider can't tell. */
+data class BackupFolderState(
+    val isChosen: Boolean = false,
+    val folderName: String? = null,
+    val lastBackupAtMillis: Long? = null,
+    val hasProblem: Boolean = false,
+)
 
 /** What a picked backup contains, shown before it replaces anything. */
 data class RestorePreview(
@@ -82,4 +92,6 @@ sealed interface SettingsEvent {
     data object FileUnreadable : SettingsEvent
 
     data object DataErased : SettingsEvent
+
+    data class BackupFinished(val outcome: BackupOutcome) : SettingsEvent
 }

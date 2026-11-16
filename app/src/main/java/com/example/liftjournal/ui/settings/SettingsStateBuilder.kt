@@ -5,7 +5,8 @@ import com.example.liftjournal.domain.goals.goalPercent
 import com.example.liftjournal.domain.goals.goalProgress
 import com.example.liftjournal.domain.goals.suggestedTarget
 import com.example.liftjournal.domain.model.JournalEntry
-import com.example.liftjournal.domain.settings.UserSettings
+import com.example.liftjournal.domain.settings.AppSettings
+import com.example.liftjournal.domain.settings.BackupStatus
 import com.example.liftjournal.domain.stats.exerciseDisplayName
 import com.example.liftjournal.domain.stats.knownExercises
 import com.example.liftjournal.ui.common.NamedGoal
@@ -15,20 +16,35 @@ import java.time.LocalDate
 internal fun buildSettingsState(
     entries: List<JournalEntry>,
     goals: List<Goal>,
-    settings: UserSettings,
+    settings: AppSettings,
     inputs: SettingsInputs,
     today: LocalDate,
-): SettingsUiState = SettingsUiState(
-    today = today,
-    entryCount = entries.size,
-    workoutCount = entries.count { it.isWorkout },
-    goals = goals.map { goalRow(it, entries, today, settings.bodyweightKg) },
-    goalForm = goalForm(entries, inputs, today, settings.bodyweightKg),
-    bodyweightKg = settings.bodyweightKg,
-    ghostText = settings.ghostText,
-    theme = settings.theme,
-    dialog = inputs.dialog,
-)
+    backupFolderName: String? = null,
+): SettingsUiState {
+    val user = settings.user
+    return SettingsUiState(
+        today = today,
+        entryCount = entries.size,
+        workoutCount = entries.count { it.isWorkout },
+        goals = goals.map { goalRow(it, entries, today, user.bodyweightKg) },
+        goalForm = goalForm(entries, inputs, today, user.bodyweightKg),
+        bodyweightKg = user.bodyweightKg,
+        ghostText = user.ghostText,
+        theme = user.theme,
+        backup = backupFolderState(settings.backup, backupFolderName),
+        dialog = inputs.dialog,
+    )
+}
+
+private fun backupFolderState(status: BackupStatus, folderName: String?): BackupFolderState {
+    if (status.folderUri == null) return BackupFolderState()
+    return BackupFolderState(
+        isChosen = true,
+        folderName = folderName,
+        lastBackupAtMillis = status.lastBackupAtMillis,
+        hasProblem = status.hasProblem,
+    )
+}
 
 private fun goalRow(goal: Goal, entries: List<JournalEntry>, today: LocalDate, bodyweightKg: Double?): GoalRow {
     val progress = goalProgress(goal, entries, today, bodyweightKg)

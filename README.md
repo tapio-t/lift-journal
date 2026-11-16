@@ -41,3 +41,21 @@ push-up 0.5 bw x 20          → fraction of bodyweight
 ```
 
 The full rules are in `docs/SPEC.md` §4.
+
+## Real-time backup and cloud folders
+
+In Goals & Settings → Backup folder, choose a folder (for example `Documents/LiftJournal`). After every change, about 2 seconds later, the app writes:
+
+- `lift-journal-backup.json`: the full backup, in the same format as the prototype's backup. Restore it with Goals & Settings → Restore from backup.
+- `lift-journal-YYYY-MM-DD.json`: a daily snapshot. The 14 newest are kept.
+
+The app itself never goes online. To get a cloud copy, choose a folder that another app keeps in sync. That only works if the provider supports picking a folder (Storage Access Framework tree access), and some providers don't.
+
+| Provider | Folder backup works? |
+|---|---|
+| On-device storage (`Documents/…`) | Yes |
+| A local folder synced by a sync app (e.g. Syncthing, FolderSync) | Expected yes; not yet verified on a device |
+| Google Drive app | Not yet verified; the Drive app may not offer folder access |
+| Nextcloud, Dropbox, OneDrive apps | Not yet verified |
+
+Fill in this table as providers are checked on real devices.

@@ -25,6 +25,7 @@ import com.example.liftjournal.ui.settings.SettingsScreen
 import com.example.liftjournal.ui.theme.JournalsPalette
 import com.example.liftjournal.ui.theme.LiftJournalTheme
 import com.example.liftjournal.ui.theme.LocalPalette
+import com.example.liftjournal.ui.theme.SystemBarIcons
 import com.example.liftjournal.ui.theme.paletteFor
 
 /** Root of the UI: the three tabs with a bottom bar in portrait and a rail in landscape. */
@@ -38,6 +39,7 @@ fun AppShell(viewModel: AppShellViewModel = viewModel(factory = AppShellViewMode
     val palette = if (current == Destination.JOURNALS) JournalsPalette else paletteFor(themeMode)
     val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
     val onSelect: (Destination) -> Unit = { navController.navigateToTab(it) }
+    SystemBarIcons(palette)
 
     LiftJournalTheme(palette) {
         val background = Modifier.fillMaxSize().background(LocalPalette.current.background)

@@ -4,7 +4,7 @@ A minimal black-and-white fitness journal for Android.
 
 You type your training as plain text, for example `deadlift 50 x 5, 5, 5`. The app turns it into progress charts and goal tracking. Everything stays on your phone, and it's backed up in real time to a folder you choose.
 
-**Status:** a working HTML prototype is done. The native Android app (Kotlin + Jetpack Compose) is next, developed with Claude Code in Android Studio.
+**Status:** the native Android app (Kotlin + Jetpack Compose) is built on branch `feature/full-app` (pull request #1), following the HTML prototype.
 
 ## Repository layout
 
@@ -16,7 +16,15 @@ You type your training as plain text, for example `deadlift 50 x 5, 5, 5`. The a
 | `prototype/` | The HTML prototype (open `lift-journal.html` in Chrome) and notes on what not to port |
 | `testdata/` | Golden parser cases, a prototype backup sample, and a text-import sample |
 
-The Android project (`app/`, Gradle files) is created in phase 0 of `docs/PLAN.md`.
+The Android project is in `app/`, with the Gradle files at the root.
+
+## Building
+
+```bash
+./gradlew assembleDebug          # debug APK in app/build/outputs/apk/debug/
+./gradlew testDebugUnitTest      # JVM unit tests
+./gradlew assembleRelease        # signed release APK, if keystore.properties exists (see keystore.properties.example)
+```
 
 ## Getting started in Android Studio with Claude Code
 
@@ -42,20 +50,11 @@ push-up 0.5 bw x 20          → fraction of bodyweight
 
 The full rules are in `docs/SPEC.md` §4.
 
-## Real-time backup and cloud folders
+## Real-time backup
 
-In Goals & Settings → Backup folder, choose a folder (for example `Documents/LiftJournal`). After every change, about 2 seconds later, the app writes:
+The app runs locally only: it has no internet permission and no cloud connections.
+
+In Goals & Settings → Backup folder, choose a folder on the phone (for example `Documents/LiftJournal`). After every change, about 2 seconds later, the app writes:
 
 - `lift-journal-backup.json`: the full backup, in the same format as the prototype's backup. Restore it with Goals & Settings → Restore from backup.
 - `lift-journal-YYYY-MM-DD.json`: a daily snapshot. The 14 newest are kept.
-
-The app itself never goes online. To get a cloud copy, choose a folder that another app keeps in sync. That only works if the provider supports picking a folder (Storage Access Framework tree access), and some providers don't.
-
-| Provider | Folder backup works? |
-|---|---|
-| On-device storage (`Documents/…`) | Yes |
-| A local folder synced by a sync app (e.g. Syncthing, FolderSync) | Expected yes; not yet verified on a device |
-| Google Drive app | Not yet verified; the Drive app may not offer folder access |
-| Nextcloud, Dropbox, OneDrive apps | Not yet verified |
-
-Fill in this table as providers are checked on real devices.

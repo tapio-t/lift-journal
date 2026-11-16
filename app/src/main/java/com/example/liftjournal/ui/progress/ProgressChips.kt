@@ -16,6 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,6 +55,8 @@ fun ProgressChip(text: String, isSelected: Boolean, size: ChipSize, onClick: () 
     val shape = RoundedCornerShape(height / 2)
     Box(
         Modifier
+            // The chip stays small but its touch target is 48 dp (PLAN phase 8).
+            .minimumInteractiveComponentSize()
             .height(height)
             .clip(shape)
             .background(if (isSelected) palette.foreground else palette.background)

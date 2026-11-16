@@ -210,7 +210,6 @@
     <string name="settings_backup_problem">The backup folder can\'t be reached. Choose it again, or pick another folder.</string>
     <string name="settings_backup_choose">Choose folder</string>
     <string name="settings_backup_now">Back up now</string>
-    <string name="settings_backup_cloud_hint">A cloud copy needs a folder that another app keeps in sync. Lift Journal itself never goes online.</string>
     <string name="settings_backed_up">Backed up</string>
     <string name="settings_backup_no_folder">Choose a backup folder first</string>
     <string name="settings_backup_unavailable">The backup folder can\'t be reached</string>

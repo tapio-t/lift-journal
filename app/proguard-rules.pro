@@ -1,6 +1,2 @@
-# kotlinx.serialization: keep generated serializers for the backup JSON classes.
--keepattributes *Annotation*, InnerClasses
--keepclassmembers class com.example.liftjournal.domain.backup.** {
-    *** Companion;
-    kotlinx.serialization.KSerializer serializer(...);
-}
+# No app-specific rules are needed: backups are read and written with kotlinx.serialization's JsonElement API,
+# which uses no reflection, and the libraries ship their own R8 rules.

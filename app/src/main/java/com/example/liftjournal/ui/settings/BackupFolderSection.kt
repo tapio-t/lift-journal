@@ -54,7 +54,6 @@ fun BackupFolderSection(
         Hint(stringResource(R.string.settings_backup_not_set), Modifier.padding(bottom = RowGap))
     }
     BackupButtons(backup.isChosen, onChooseFolder, onBackUpNow)
-    Hint(stringResource(R.string.settings_backup_cloud_hint))
 }
 
 @Composable

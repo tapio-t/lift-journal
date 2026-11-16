@@ -15,6 +15,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -83,11 +84,14 @@ private fun EntryDate(dateText: String, onClick: (() -> Unit)?, modifier: Modifi
     val clickable = if (onClick == null) {
         Modifier
     } else {
-        Modifier.clickable(
-            onClickLabel = stringResource(R.string.journals_change_top_date, dateText),
-            role = Role.Button,
-            onClick = onClick,
-        )
+        // A 48 dp touch target (PLAN phase 8). Saved entries already have a 48 dp row because of the pen button.
+        Modifier
+            .minimumInteractiveComponentSize()
+            .clickable(
+                onClickLabel = stringResource(R.string.journals_change_top_date, dateText),
+                role = Role.Button,
+                onClick = onClick,
+            )
     }
     Box(modifier) {
         Text(text = dateText, style = AppText.entryDate, color = LocalPalette.current.foreground, modifier = clickable)

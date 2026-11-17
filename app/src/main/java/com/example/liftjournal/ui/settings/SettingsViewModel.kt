@@ -124,7 +124,9 @@ class SettingsViewModel(
     }
 
     /** × on a goal asks first; removing a goal can't be undone (owner decision). */
-    fun onRemoveGoalClicked(goal: NamedGoal) = inputs.update { it.copy(dialog = SettingsDialog.ConfirmRemoveGoal(goal)) }
+    fun onRemoveGoalClicked(goal: NamedGoal) {
+        inputs.update { it.copy(dialog = SettingsDialog.ConfirmRemoveGoal(goal)) }
+    }
 
     fun onRemoveGoalConfirmed(goal: Goal) {
         inputs.update { it.copy(dialog = null) }

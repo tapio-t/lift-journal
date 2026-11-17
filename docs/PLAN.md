@@ -181,7 +181,7 @@ Each phase ends with:
   - Use a WorkManager unique one-time work (`REPLACE` policy) so writes survive the app being closed.
 - **What it writes:**
   - `lift-journal-backup.json`: the full backup, in the same format as manual backup (`SPEC.md` §7.1). Write a temporary document first and then replace, so a crash never leaves a half-written file. If the provider doesn't support rename, fall back to truncate-and-write.
-  - Daily snapshot `lift-journal-YYYY-MM-DD.json`, keeping the 14 newest.
+  - Nothing else: `lift-journal-backup.json` is the only file the app keeps in the folder (owner decision; the daily snapshots were removed).
 - **Status and errors:**
   - Settings shows "Last backup: today 12:04" and a "Back up now" button.
   - If the folder or its permission disappears, show a warning in Settings and a one-time snackbar on Journals. Never block logging.

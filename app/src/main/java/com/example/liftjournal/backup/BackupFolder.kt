@@ -4,10 +4,7 @@ import android.content.ContentResolver
 import androidx.documentfile.provider.DocumentFile
 import com.example.liftjournal.domain.backup.LATEST_BACKUP_FILE_NAME
 import com.example.liftjournal.domain.backup.PENDING_BACKUP_FILE_NAME
-import com.example.liftjournal.domain.backup.snapshotFileName
-import com.example.liftjournal.domain.backup.snapshotsToDelete
 import java.io.IOException
-import java.time.LocalDate
 
 private const val JSON_MIME_TYPE = "application/json"
 
@@ -27,17 +24,6 @@ class BackupFolder(private val root: DocumentFile, private val contentResolver: 
         if (pending.renameTo(LATEST_BACKUP_FILE_NAME)) return
         writeFile(LATEST_BACKUP_FILE_NAME, bytes)
         pending.delete()
-    }
-
-    /** Writes today's snapshot, replacing an earlier one from the same day. */
-    fun writeSnapshot(date: LocalDate, json: String) {
-        writeFile(snapshotFileName(date), json.toByteArray(Charsets.UTF_8))
-    }
-
-    /** Deletes old snapshots so only the newest 14 remain. */
-    fun deleteOldSnapshots() {
-        val names = root.listFiles().mapNotNull { it.name }
-        snapshotsToDelete(names).forEach { name -> root.findFile(name)?.delete() }
     }
 
     private fun writeFile(name: String, bytes: ByteArray): DocumentFile {

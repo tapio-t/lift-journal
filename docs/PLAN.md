@@ -143,8 +143,7 @@ Each phase ends with:
 
 - Black screen, search field, month tags, and the entry list exactly as `SPEC.md` §3.
 - Inline editing with autosave: debounce 500 ms, plus save on focus loss and on `ON_STOP`.
-- Today's entry gets focus on open. The blinking cursor shows when it is empty.
-- Tapping the date header picks another date.
+- Nothing gets focus on open; the keyboard appears only when the user taps an entry.
 - **Ghost text:** a custom `BasicTextField` decoration that draws the grey ghost line remainder after each typed line, plus the Tab-to-accept behaviour.
 - **Edit and delete (new):**
   - Pen icon on each saved entry's date header opens a menu with Change date and Delete.

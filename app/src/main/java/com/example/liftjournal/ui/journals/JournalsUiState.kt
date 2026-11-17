@@ -9,9 +9,6 @@ data class EntryItem(val date: LocalDate, val text: String)
 
 /** The dialog Journals is showing, if any. */
 sealed interface JournalDialog {
-    /** Picking which date the top entry is for. */
-    data class PickTopDate(val current: LocalDate) : JournalDialog
-
     /** Picking the new date for "Change date". */
     data class PickMoveDate(val from: LocalDate) : JournalDialog
 
@@ -46,6 +43,4 @@ sealed interface JournalEvent {
     data class EntryDeleted(val entry: StoredEntry) : JournalEvent
 
     data object BackupProblem : JournalEvent
-
-    data object FocusTopEntry : JournalEvent
 }

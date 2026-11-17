@@ -1,6 +1,8 @@
 package com.example.liftjournal.ui.journals
 
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assertIsFocused
+import androidx.compose.ui.test.assertIsNotFocused
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.v2.createComposeRule
@@ -9,7 +11,6 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.lifecycle.SavedStateHandle
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -55,7 +56,7 @@ class JournalsScreenTest {
             repository.saveEntry(LocalDate.of(2026, 11, 9), "squat 100 x 5")
             repository.saveEntry(LocalDate.of(2026, 10, 20), "bench 60 x 5")
         }
-        viewModel = JournalsViewModel(repository, settings, { today }, SavedStateHandle())
+        viewModel = JournalsViewModel(repository, settings, { today })
         compose.setContent { LiftJournalTheme(JournalsPalette) { JournalsScreen(viewModel) } }
     }
 
@@ -121,6 +122,22 @@ class JournalsScreenTest {
 
         compose.waitUntilExactlyOneExists(hasText("squat 100 x 5\nbench 60 x 5"))
         compose.onNodeWithText("20.10.2026").assertDoesNotExist()
+    }
+
+    @Test
+    fun openingJournalsFocusesNoEntry() {
+        compose.onNodeWithContentDescription("Journal 11.11.2026").assertIsNotFocused()
+    }
+
+    @Test
+    fun tappingOutsideAnEntryRemovesFocus() {
+        val todaysEntry = compose.onNodeWithContentDescription("Journal 11.11.2026")
+        todaysEntry.performClick()
+        todaysEntry.assertIsFocused()
+
+        compose.onNodeWithText("09.11.2026").performClick()
+
+        todaysEntry.assertIsNotFocused()
     }
 
     @Test

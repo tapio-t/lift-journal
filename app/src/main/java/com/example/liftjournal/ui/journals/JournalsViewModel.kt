@@ -1,9 +1,7 @@
 package com.example.liftjournal.ui.journals
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -17,8 +15,6 @@ import com.example.liftjournal.domain.model.JournalEntry
 import com.example.liftjournal.domain.model.StoredEntry
 import com.example.liftjournal.domain.settings.AppSettings
 import com.example.liftjournal.domain.time.TodayProvider
-import com.example.liftjournal.domain.time.parseStorageDate
-import com.example.liftjournal.domain.time.toStorageString
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -42,12 +38,9 @@ private const val AUTOSAVE_DELAY_MS = 500L
 /** How often to check whether the day has changed, so the top entry rolls over at midnight. */
 private const val DAY_CHECK_INTERVAL_MS = 30_000L
 
-private const val KEY_TOP_DATE = "topDate"
-
 /** What the user has done on the screen, apart from the stored data. */
 private data class ScreenInputs(
     val today: LocalDate,
-    val topDate: LocalDate,
     val query: String = "",
     val monthFilter: YearMonth? = null,
     val isSearchOpen: Boolean = false,
@@ -60,9 +53,8 @@ class JournalsViewModel(
     private val journalRepository: JournalRepository,
     settingsRepository: SettingsRepository,
     private val todayProvider: TodayProvider,
-    private val savedState: SavedStateHandle,
 ) : ViewModel() {
-    private val inputs = MutableStateFlow(initialInputs())
+    private val inputs = MutableStateFlow(ScreenInputs(today = todayProvider.today()))
     private val events = Channel<JournalEvent>(Channel.BUFFERED)
     private var autosaveJob: Job? = null
 
@@ -108,16 +100,6 @@ class JournalsViewModel(
     fun onClearSearch() {
         saveNow()
         inputs.update { it.copy(query = "", monthFilter = null, isSearchOpen = false) }
-        events.trySend(JournalEvent.FocusTopEntry)
-    }
-
-    fun onTopDateClicked() = inputs.update { it.copy(dialog = JournalDialog.PickTopDate(it.topDate)) }
-
-    fun onTopDatePicked(date: LocalDate) {
-        saveNow()
-        savedState[KEY_TOP_DATE] = date.toStorageString()
-        inputs.update { it.copy(topDate = date, dialog = null) }
-        events.trySend(JournalEvent.FocusTopEntry)
     }
 
     fun onChangeDateClicked(date: LocalDate) = inputs.update { it.copy(dialog = JournalDialog.PickMoveDate(date)) }
@@ -183,16 +165,16 @@ class JournalsViewModel(
 
     private fun buildState(entries: List<JournalEntry>, settings: AppSettings, screen: ScreenInputs): JournalsUiState {
         val items = entries.map { EntryItem(it.date, screen.unsavedText[it.date] ?: it.text) }
-        val stored = entries.firstOrNull { it.date == screen.topDate }
+        val stored = entries.firstOrNull { it.date == screen.today }
         val itemsByDate = items.associateBy { it.date }
         val filtered = searchEntries(entries, screen.query, screen.monthFilter).map { itemsByDate.getValue(it.date) }
         val isFiltering = screen.query.isNotBlank() || screen.monthFilter != null
         return JournalsUiState(
             isLoaded = true,
-            top = EntryItem(screen.topDate, screen.unsavedText[screen.topDate] ?: stored?.text.orEmpty()),
+            top = EntryItem(screen.today, screen.unsavedText[screen.today] ?: stored?.text.orEmpty()),
             topHasSavedEntry = stored != null,
-            ghostLines = if (settings.user.ghostText) ghostLinesFor(screen.topDate, entries).orEmpty() else emptyList(),
-            entries = if (isFiltering) filtered else items.filter { it.date != screen.topDate },
+            ghostLines = if (settings.user.ghostText) ghostLinesFor(screen.today, entries).orEmpty() else emptyList(),
+            entries = if (isFiltering) filtered else items.filter { it.date != screen.today },
             query = screen.query,
             monthFilter = screen.monthFilter,
             isSearchOpen = screen.isSearchOpen,
@@ -201,24 +183,15 @@ class JournalsViewModel(
         )
     }
 
-    private fun initialInputs(): ScreenInputs {
-        val today = todayProvider.today()
-        val savedTopDate = savedState.get<String>(KEY_TOP_DATE)?.let(::parseStorageDate)
-        return ScreenInputs(today = today, topDate = savedTopDate ?: today)
-    }
-
-    /** At midnight the top entry moves on to the new day, unless the user picked another date. */
+    /** At midnight the top entry moves on to the new day. */
     private fun watchForDayChange() {
         viewModelScope.launch {
             while (true) {
                 delay(DAY_CHECK_INTERVAL_MS)
                 val newToday = todayProvider.today()
-                val screen = inputs.value
-                if (newToday == screen.today) continue
+                if (newToday == inputs.value.today) continue
                 saveUnsavedText(deleteBlankEntries = false)
-                val topDate = if (screen.topDate == screen.today) newToday else screen.topDate
-                savedState[KEY_TOP_DATE] = topDate.toStorageString()
-                inputs.update { it.copy(today = newToday, topDate = topDate) }
+                inputs.update { it.copy(today = newToday) }
             }
         }
     }
@@ -240,7 +213,6 @@ class JournalsViewModel(
                     journalRepository = container.journalRepository,
                     settingsRepository = container.settingsRepository,
                     todayProvider = container.todayProvider,
-                    savedState = createSavedStateHandle(),
                 )
             }
         }

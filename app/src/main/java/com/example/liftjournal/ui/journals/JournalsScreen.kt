@@ -1,5 +1,6 @@
 package com.example.liftjournal.ui.journals
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,7 +18,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -41,26 +43,31 @@ private val JournalsGutter = 20.dp
 fun JournalsScreen(viewModel: JournalsViewModel = viewModel(factory = JournalsViewModel.Factory)) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
-    val topFocus = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
 
-    JournalEvents(viewModel, snackbarHostState, topFocus)
+    JournalEvents(viewModel, snackbarHostState)
     LifecycleEventEffect(Lifecycle.Event.ON_STOP) { viewModel.onStop() }
     DisposableEffect(Unit) { onDispose { viewModel.onStop() } }
-    // Opening Journals puts the cursor in the top entry (SPEC §1).
-    LaunchedEffect(state.isLoaded) {
-        if (state.isLoaded && !state.isFiltering) runCatching { topFocus.requestFocus() }
-    }
 
-    Box(Modifier.fillMaxSize().imePadding()) {
+    // The keyboard only opens when the user taps an entry; tapping anywhere else closes it (SPEC §3.1).
+    Box(
+        Modifier
+            .fillMaxSize()
+            .imePadding()
+            .pointerInput(Unit) { detectTapGestures { focusManager.clearFocus() } },
+    ) {
         Column(Modifier.fillMaxSize().padding(horizontal = JournalsGutter)) {
             JournalSearchBar(
                 state = state,
                 onOpened = viewModel::onSearchOpened,
                 onQueryChange = viewModel::onQueryChanged,
-                onClear = viewModel::onClearSearch,
+                onClear = {
+                    focusManager.clearFocus()
+                    viewModel.onClearSearch()
+                },
                 onMonthTagClick = viewModel::onMonthTagClicked,
             )
-            EntryList(state, viewModel, topFocus)
+            EntryList(state, viewModel)
         }
         SnackbarHost(snackbarHostState, Modifier.align(Alignment.BottomCenter))
     }
@@ -68,16 +75,15 @@ fun JournalsScreen(viewModel: JournalsViewModel = viewModel(factory = JournalsVi
 }
 
 @Composable
-private fun EntryList(state: JournalsUiState, viewModel: JournalsViewModel, topFocus: FocusRequester) {
+private fun EntryList(state: JournalsUiState, viewModel: JournalsViewModel) {
     val top = state.top
     LazyColumn(Modifier.fillMaxSize()) {
         if (!state.isFiltering && top != null) {
             item(key = "top") {
                 JournalEntryItem(
                     item = top,
-                    actions = entryActions(top, viewModel, canEdit = state.topHasSavedEntry, isTop = true),
+                    actions = entryActions(top, viewModel, canEdit = state.topHasSavedEntry),
                     ghostLines = state.ghostLines,
-                    focusRequester = topFocus,
                 )
             }
         }
@@ -85,19 +91,17 @@ private fun EntryList(state: JournalsUiState, viewModel: JournalsViewModel, topF
             item(key = "none") { NoEntriesFound() }
         }
         items(state.entries, key = { it.date.toEpochDay() }) { entry ->
-            JournalEntryItem(item = entry, actions = entryActions(entry, viewModel, canEdit = true, isTop = false))
+            JournalEntryItem(item = entry, actions = entryActions(entry, viewModel, canEdit = true))
         }
     }
 }
 
-private fun entryActions(item: EntryItem, viewModel: JournalsViewModel, canEdit: Boolean, isTop: Boolean) =
-    EntryActions(
-        onTextChange = { viewModel.onTextChanged(item.date, it) },
-        onFocusLost = viewModel::onEditorFocusLost,
-        onChangeDate = if (canEdit) ({ viewModel.onChangeDateClicked(item.date) }) else null,
-        onDelete = if (canEdit) ({ viewModel.onDeleteClicked(item.date) }) else null,
-        onDateClick = if (isTop) viewModel::onTopDateClicked else null,
-    )
+private fun entryActions(item: EntryItem, viewModel: JournalsViewModel, canEdit: Boolean) = EntryActions(
+    onTextChange = { viewModel.onTextChanged(item.date, it) },
+    onFocusLost = viewModel::onEditorFocusLost,
+    onChangeDate = if (canEdit) ({ viewModel.onChangeDateClicked(item.date) }) else null,
+    onDelete = if (canEdit) ({ viewModel.onDeleteClicked(item.date) }) else null,
+)
 
 @Composable
 private fun NoEntriesFound() {
@@ -110,11 +114,7 @@ private fun NoEntriesFound() {
 }
 
 @Composable
-private fun JournalEvents(
-    viewModel: JournalsViewModel,
-    snackbarHostState: SnackbarHostState,
-    topFocus: FocusRequester,
-) {
+private fun JournalEvents(viewModel: JournalsViewModel, snackbarHostState: SnackbarHostState) {
     val resources = LocalResources.current
     LaunchedEffect(viewModel) {
         viewModel.oneOffEvents.collect { event ->
@@ -129,7 +129,6 @@ private fun JournalEvents(
                 JournalEvent.BackupProblem -> snackbarHostState.showSnackbar(
                     resources.getString(R.string.journals_backup_problem),
                 )
-                JournalEvent.FocusTopEntry -> runCatching { topFocus.requestFocus() }
             }
         }
     }
@@ -139,11 +138,6 @@ private fun JournalEvents(
 private fun JournalDialogs(dialog: JournalDialog?, viewModel: JournalsViewModel) {
     when (dialog) {
         null -> Unit
-        is JournalDialog.PickTopDate -> DatePickerPopup(
-            initialDate = dialog.current,
-            onDatePicked = viewModel::onTopDatePicked,
-            onDismiss = viewModel::onDialogDismissed,
-        )
         is JournalDialog.PickMoveDate -> DatePickerPopup(
             initialDate = dialog.from,
             onDatePicked = { viewModel.onMoveDatePicked(dialog.from, it) },

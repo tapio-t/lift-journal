@@ -1,17 +1,7 @@
 package com.example.liftjournal.ui.journals
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.keyframes
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
@@ -22,9 +12,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -43,17 +30,11 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.dp
 import com.example.liftjournal.domain.journal.acceptGhostLine
 import com.example.liftjournal.domain.journal.ghostOverlay
 import com.example.liftjournal.ui.theme.AppText
 import com.example.liftjournal.ui.theme.JournalsSearchColors
 import com.example.liftjournal.ui.theme.LocalPalette
-
-private const val CARET_BLINK_MS = 1060
-private val CaretWidth = 2.dp
-private val CaretHeight = 21.dp
-private val CaretTopOffset = 3.dp
 
 /**
  * An entry's text, editable in place. The top entry can show [ghostLines] in grey inside the field
@@ -67,7 +48,6 @@ fun EntryEditor(
     onFocusLost: () -> Unit,
     modifier: Modifier = Modifier,
     ghostLines: List<String> = emptyList(),
-    focusRequester: FocusRequester? = null,
 ) {
     var value by remember { mutableStateOf(TextFieldValue(text, TextRange(text.length))) }
     var isFocused by remember { mutableStateOf(false) }
@@ -90,7 +70,6 @@ fun EntryEditor(
         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.None, autoCorrectEnabled = false),
         modifier = modifier
             .fillMaxWidth()
-            .let { if (focusRequester != null) it.focusRequester(focusRequester) else it }
             .onFocusChanged { state ->
                 if (isFocused && !state.isFocused) onFocusLost()
                 isFocused = state.isFocused
@@ -108,7 +87,6 @@ fun EntryEditor(
             Box {
                 if (ghostLines.isNotEmpty()) GhostText(value.text, ghostLines)
                 innerTextField()
-                if (value.text.isEmpty() && !isFocused) BlinkingCaret()
             }
         },
     )
@@ -130,33 +108,4 @@ private fun ghostAnnotatedText(typedText: String, ghostLines: List<String>): Ann
         withStyle(SpanStyle(color = Color.Transparent)) { append(line.typed) }
         append(line.remainder)
     }
-}
-
-/** The empty top entry shows only a blinking cursor while the field isn't focused (SPEC §3.1). */
-@Composable
-private fun BlinkingCaret() {
-    val transition = rememberInfiniteTransition(label = "caret")
-    val alpha by transition.animateFloat(
-        initialValue = 1f,
-        targetValue = 0f,
-        animationSpec = infiniteRepeatable(
-            animation = keyframes {
-                // On for the first half, off for the second, like a text cursor.
-                durationMillis = CARET_BLINK_MS
-                1f at 0 using LinearEasing
-                1f at CARET_BLINK_MS / 2 - 1 using LinearEasing
-                0f at CARET_BLINK_MS / 2 using LinearEasing
-            },
-            repeatMode = RepeatMode.Restart,
-        ),
-        label = "caretAlpha",
-    )
-    Box(
-        Modifier
-            .offset(y = CaretTopOffset)
-            .width(CaretWidth)
-            .height(CaretHeight)
-            .alpha(alpha)
-            .background(LocalPalette.current.foreground),
-    )
 }

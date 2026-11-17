@@ -19,7 +19,6 @@
     <string name="journals_no_months">No journals yet</string>
     <string name="journals_none_found">No journals found.</string>
     <string name="journals_entry_label">Journal %1$s</string>
-    <string name="journals_change_top_date">Change date, %1$s</string>
     <string name="journals_edit_entry">Edit entry %1$s</string>
     <string name="journals_menu_change_date">Change date</string>
     <string name="journals_menu_delete">Delete</string>

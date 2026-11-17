@@ -87,7 +87,7 @@ Rules:
 
 ### 5.1 Orientation and layout
 
-Progress is always landscape (`SCREEN_ORIENTATION_SENSOR_LANDSCAPE` while the tab is shown). The layout, top to bottom:
+Progress is always landscape (`SCREEN_ORIENTATION_SENSOR_LANDSCAPE` while the tab is shown). The rotation is requested before the tab switch, without a tab crossfade, and uses a quick cut instead of the turning animation. The layout, top to bottom:
 
 - **Header row:** the title "PROGRESS", the period control, and three stats on the right.
 

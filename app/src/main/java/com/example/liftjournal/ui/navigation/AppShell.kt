@@ -1,6 +1,9 @@
 package com.example.liftjournal.ui.navigation
 
 import android.content.res.Configuration
+import androidx.activity.compose.LocalActivity
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -38,7 +42,15 @@ fun AppShell(viewModel: AppShellViewModel = viewModel(factory = AppShellViewMode
     // Journals is always black; the other tabs follow the appearance setting (SPEC §1).
     val palette = if (current == Destination.JOURNALS) JournalsPalette else paletteFor(themeMode)
     val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
-    val onSelect: (Destination) -> Unit = { navController.navigateToTab(it) }
+    val activity = LocalActivity.current
+    // The rotation is requested before navigating, so the window turns while the new tab is first drawn,
+    // instead of drawing the new tab in the old orientation and then rotating.
+    val onSelect: (Destination) -> Unit = { destination ->
+        activity?.requestedOrientation = destination.screenOrientation
+        navController.navigateToTab(destination)
+    }
+    // Also covers the back button and a restored back stack, where no tab was tapped.
+    LaunchedEffect(activity, current) { activity?.requestedOrientation = current.screenOrientation }
     SystemBarIcons(palette)
 
     LiftJournalTheme(palette) {
@@ -60,7 +72,13 @@ fun AppShell(viewModel: AppShellViewModel = viewModel(factory = AppShellViewMode
 @Composable
 private fun TabContent(navController: NavHostController, modifier: Modifier) {
     Box(modifier.statusBarsPadding()) {
-        NavHost(navController, startDestination = Destination.JOURNALS.route) {
+        // No crossfade between tabs: an animation running during a rotation makes the switch feel slow.
+        NavHost(
+            navController,
+            startDestination = Destination.JOURNALS.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+        ) {
             composable(Destination.JOURNALS.route) { JournalsScreen() }
             composable(Destination.PROGRESS.route) { ProgressScreen() }
             composable(Destination.SETTINGS.route) { SettingsScreen() }

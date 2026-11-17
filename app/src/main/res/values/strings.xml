@@ -304,7 +304,11 @@
         <item>→ bodyweight × 8</item>
         <item>→ half bodyweight × 20</item>
     </string-array>
-    <string name="settings_entry_format_note">One exercise per line. “kg” optional. Decimals with a dot: 72.5.</string>
+    <string-array name="settings_entry_format_notes">
+        <item>One exercise per line.</item>
+        <item>“kg” is optional.</item>
+        <item>Decimals with a dot: for example 72.5</item>
+    </string-array>
 
     <string name="settings_section_reset">Reset</string>
     <string name="settings_erase">Erase all data</string>

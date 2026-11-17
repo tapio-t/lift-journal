@@ -118,7 +118,11 @@ fun EntryFormatSection() {
             }
             Text(line, style = EntryFormatText, color = palette.foreground)
         }
-        Text(stringResource(R.string.settings_entry_format_note), style = EntryFormatText, color = palette.muted)
+        // The rules get their own rows, in the same colour as the examples, so they are as easy to read.
+        stringArrayResource(R.array.settings_entry_format_notes).forEachIndexed { index, note ->
+            val topGap = if (index == 0) RowGap else 0.dp
+            Text(note, style = EntryFormatText, color = palette.foreground, modifier = Modifier.padding(top = topGap))
+        }
     }
 }
 

@@ -56,5 +56,4 @@ The app runs locally only: it has no internet permission and no cloud connection
 
 In Goals & Settings → Backup folder, choose a folder on the phone (for example `Documents/LiftJournal`). After every change, about 2 seconds later, the app writes:
 
-- `lift-journal-backup.json`: the full backup, in the same format as the prototype's backup. Restore it with Goals & Settings → Restore from backup.
-- `lift-journal-YYYY-MM-DD.json`: a daily snapshot. The 14 newest are kept.
+- `lift-journal-backup.json`: the full backup, in the same format as the prototype's backup. Restore it with Goals & Settings → Restore from backup. It is the only file the app writes there.

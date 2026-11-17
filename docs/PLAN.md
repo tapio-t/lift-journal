@@ -143,8 +143,7 @@ Each phase ends with:
 
 - Black screen, search field, month tags, and the entry list exactly as `SPEC.md` §3.
 - Inline editing with autosave: debounce 500 ms, plus save on focus loss and on `ON_STOP`.
-- Today's entry gets focus on open. The blinking cursor shows when it is empty.
-- Tapping the date header picks another date.
+- Nothing gets focus on open; the keyboard appears only when the user taps an entry.
 - **Ghost text:** a custom `BasicTextField` decoration that draws the grey ghost line remainder after each typed line, plus the Tab-to-accept behaviour.
 - **Edit and delete (new):**
   - Pen icon on each saved entry's date header opens a menu with Change date and Delete.
@@ -182,7 +181,7 @@ Each phase ends with:
   - Use a WorkManager unique one-time work (`REPLACE` policy) so writes survive the app being closed.
 - **What it writes:**
   - `lift-journal-backup.json`: the full backup, in the same format as manual backup (`SPEC.md` §7.1). Write a temporary document first and then replace, so a crash never leaves a half-written file. If the provider doesn't support rename, fall back to truncate-and-write.
-  - Daily snapshot `lift-journal-YYYY-MM-DD.json`, keeping the 14 newest.
+  - Nothing else: `lift-journal-backup.json` is the only file the app keeps in the folder (owner decision; the daily snapshots were removed).
 - **Status and errors:**
   - Settings shows "Last backup: today 12:04" and a "Back up now" button.
   - If the folder or its permission disappears, show a warning in Settings and a one-time snackbar on Journals. Never block logging.
@@ -197,6 +196,7 @@ Each phase ends with:
 ### Phase 7 — Import from text files (new)
 
 - In Goals & Settings, "Import from text file" (`OpenDocument`, MIME `text/plain` and `text/markdown`). A typical source is a Google Docs file downloaded as plain text (*File → Download → Plain text (.txt)*). No cloud access is involved.
+- *(new)* Word (`.docx`) and OpenDocument text (`.odt`) files are also accepted. They are recognised from their content (a zip archive with `word/document.xml` or `content.xml`), and each paragraph becomes a line before the rules below apply. A document part over 20 MB, or a zip without one, is reported as unreadable. Old binary `.doc` files are not supported. (Owner decision.)
 - **Format:**
   - A line that consists only of a date (optionally with a weekday word) starts a new entry. Everything up to the next date line becomes that entry's text.
   - Accepted dates: `9.11.2026`, `09.11.2026`, `9.11.26`, `2026-11-09`, with an optional weekday prefix in English or Finnish (`Mon 9.11.2026`, `ma 9.11.2026`).

@@ -52,10 +52,12 @@ private val NoDataCorner = 12.dp
 private val NoDataDash = 4.dp
 private val NoDataPadding = 16.dp
 
-/** Progress tab, always in landscape: header, readout, chart and the chart choices (SPEC §5). */
+/**
+ * Progress tab: header, readout, chart and the chart choices (SPEC §5). AppShell turns the screen to landscape
+ * for it (see `TabOrientation.kt`).
+ */
 @Composable
 fun ProgressScreen(viewModel: ProgressViewModel = viewModel(factory = ProgressViewModel.Factory)) {
-    LockLandscapeWhileShown()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     if (!state.isLoaded) return
     Column(

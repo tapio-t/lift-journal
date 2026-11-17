@@ -11,7 +11,6 @@ import com.example.liftjournal.data.DataChangeNotifier
 import com.example.liftjournal.data.SettingsRepository
 import com.example.liftjournal.data.UserDataRepository
 import com.example.liftjournal.domain.backup.writeBackup
-import com.example.liftjournal.domain.time.TodayProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -50,7 +49,6 @@ class RealtimeBackupManager(
     private val userDataRepository: UserDataRepository,
     private val settingsRepository: SettingsRepository,
     private val changeNotifier: DataChangeNotifier,
-    private val todayProvider: TodayProvider,
     private val currentTimeMillis: () -> Long = System::currentTimeMillis,
 ) {
     private val hasPendingChange = AtomicBoolean(false)
@@ -74,7 +72,7 @@ class RealtimeBackupManager(
         if (hasPendingChange.get()) scheduleBackup(delaySeconds = 0)
     }
 
-    /** Writes the latest backup and today's snapshot now. */
+    /** Writes `lift-journal-backup.json` now; it is the only file the app keeps in the folder. */
     suspend fun backUpNow(): BackupOutcome = writeLock.withLock {
         hasPendingChange.set(false)
         val folderUri = settingsRepository.current().backup.folderUri ?: return BackupOutcome.NO_FOLDER
@@ -134,8 +132,6 @@ class RealtimeBackupManager(
     private suspend fun writeFiles(folder: BackupFolder, json: String): Boolean = withContext(Dispatchers.IO) {
         try {
             folder.writeLatest(json)
-            folder.writeSnapshot(todayProvider.today(), json)
-            folder.deleteOldSnapshots()
             true
         } catch (_: IOException) {
             false

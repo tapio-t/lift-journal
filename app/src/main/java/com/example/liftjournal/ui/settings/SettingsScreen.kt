@@ -47,8 +47,13 @@ private val PageTitleText = AppText.pageTitle.copy(fontSize = 28.sp)
 /** Backups are JSON; some file providers report them as plain text or generic binary. */
 private val BACKUP_MIME_TYPES = arrayOf("application/json", "text/plain", "application/octet-stream")
 
-/** Text import accepts plain text and Markdown files (PLAN phase 7). */
-private val IMPORT_MIME_TYPES = arrayOf("text/plain", "text/markdown")
+/** Import accepts plain text, Markdown, Word (.docx) and OpenDocument text (.odt) files (PLAN phase 7). */
+private val IMPORT_MIME_TYPES = arrayOf(
+    "text/plain",
+    "text/markdown",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/vnd.oasis.opendocument.text",
+)
 
 /** The folder picker starts in Documents, where we suggest creating a LiftJournal folder (PLAN phase 6). */
 private val DOCUMENTS_FOLDER: Uri =

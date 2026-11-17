@@ -97,18 +97,6 @@ class JournalRepositoryTest {
     }
 
     @Test
-    fun restoredGoalReturnsToItsPlace() = runTest {
-        val first = repository.addGoal(Goal(0, GoalType.TOP_SET, "squat", null, 160.0))
-        repository.addGoal(Goal(0, GoalType.TOTAL_VOLUME, null, GoalPeriod.WEEK, 20_000.0))
-        val removed = repository.goals.first().first()
-
-        repository.removeGoal(first)
-        repository.restoreGoal(removed)
-
-        assertEquals(listOf(GoalType.TOP_SET, GoalType.TOTAL_VOLUME), repository.goals.first().map { it.type })
-    }
-
-    @Test
     fun replaceAllSwapsEveryEntryAndGoal() = runTest {
         repository.saveEntry(monday, "squat 100 x 5")
         repository.addGoal(Goal(0, GoalType.TOP_SET, "squat", null, 160.0))

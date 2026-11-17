@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
@@ -199,8 +200,9 @@ fun <T> Dropdown(
 }
 
 /**
- * A decimal number field with a placeholder (prototype `input[type=number]`). [onDone] runs when the keyboard's
- * Done key is pressed or the field loses focus, so a value is saved without an extra button.
+ * A decimal number field with a placeholder (prototype `input[type=number]`). The keyboard's Done key leaves the
+ * field, which closes the keyboard. [onDone] runs when the field loses focus, so a value is saved without an extra
+ * button.
  */
 @Composable
 fun NumberField(
@@ -212,6 +214,7 @@ fun NumberField(
     onDone: () -> Unit = {},
 ) {
     val palette = LocalPalette.current
+    val focusManager = LocalFocusManager.current
     var isFocused by remember { mutableStateOf(false) }
     BasicTextField(
         value = value,
@@ -220,7 +223,7 @@ fun NumberField(
         textStyle = FieldText.copy(color = palette.foreground),
         cursorBrush = SolidColor(palette.foreground),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
-        keyboardActions = KeyboardActions(onDone = { onDone() }),
+        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
         modifier = modifier
             .onFocusChanged { focus ->
                 if (isFocused && !focus.isFocused) onDone()

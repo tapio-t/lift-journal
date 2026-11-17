@@ -53,20 +53,4 @@ class BackupWriterTest {
         val settings = Json.parseToJsonElement(text).jsonObject.getValue("settings").jsonObject
         assertEquals("null", settings.getValue("bodyweight").toString())
     }
-
-    @Test
-    fun `snapshot names carry the date`() {
-        assertEquals("lift-journal-2026-11-16.json", snapshotFileName(date("2026-11-16")))
-    }
-
-    @Test
-    fun `only the 14 newest snapshots are kept and other files are left alone`() {
-        val snapshots = (1..16).map { day -> snapshotFileName(date("2026-11-01").plusDays(day - 1L)) }
-        val others = listOf(LATEST_BACKUP_FILE_NAME, "notes.txt", "lift-journal-2026-11-xx.json")
-
-        assertEquals(
-            listOf("lift-journal-2026-11-02.json", "lift-journal-2026-11-01.json"),
-            snapshotsToDelete(others + snapshots.shuffled()),
-        )
-    }
 }

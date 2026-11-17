@@ -73,7 +73,7 @@ Run from the repository root, in Android Studio's terminal:
 
 - `main` is always buildable.
 - **First pull request:** the complete app on `feature/full-app`, with one or more commits per phase. Merge only when every acceptance check in `docs/PLAN.md` passes.
-- **After that:** each fix or feature goes on its own branch (`feature/…`, `fix/…`) and is merged via a small pull request.
+- **After that:** a batch of fixes or features from the owner goes on one branch (`feature/…`, `fix/…`) and one pull request, with one commit per item.
 - Small, focused commits with imperative messages ("Add golden tests for entry parser").
 - Never commit signing keys, `local.properties` or build output (see `.gitignore`).
 - Update `docs/SPEC.md` or `docs/PLAN.md` in the same pull request when behaviour or the plan changes, once the owner has approved it.

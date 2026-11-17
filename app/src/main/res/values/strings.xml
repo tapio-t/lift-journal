@@ -19,7 +19,6 @@
     <string name="journals_no_months">No journals yet</string>
     <string name="journals_none_found">No journals found.</string>
     <string name="journals_entry_label">Journal %1$s</string>
-    <string name="journals_change_top_date">Change date, %1$s</string>
     <string name="journals_edit_entry">Edit entry %1$s</string>
     <string name="journals_menu_change_date">Change date</string>
     <string name="journals_menu_delete">Delete</string>
@@ -188,7 +187,8 @@
     <string name="settings_goal_target_placeholder">kg</string>
     <string name="settings_goal_set">Set goal</string>
     <string name="settings_goal_added">Goal set · see Progress → Goal</string>
-    <string name="settings_goal_removed">Goal removed</string>
+    <string name="settings_goal_delete_question">Do you really want to delete goal %1$s?</string>
+    <string name="settings_goal_delete_confirm">Delete</string>
     <string name="settings_goal_enter_target">Enter a target in kg</string>
 
     <string name="settings_section_bodyweight">Bodyweight</string>
@@ -242,7 +242,7 @@
 
     <string name="settings_section_import">Import from text file</string>
     <string name="settings_import">Import from text file</string>
-    <string name="settings_import_hint">A line with only a date (9.11.2026, 2026-11-09, optionally after a weekday like Mon or ma) starts an entry. From Google Docs: File → Download → Plain text (.txt). Nothing is deleted.</string>
+    <string name="settings_import_hint">A line with only a date (9.11.2026, 2026-11-09, optionally after a weekday like Mon or ma) starts an entry. Text (.txt), Word (.docx) and OpenDocument (.odt) files work. From Google Docs: File → Download → Plain text or Microsoft Word. Nothing is deleted.</string>
     <string name="settings_import_title">Import this file?</string>
     <string name="settings_import_dates">%1$s · %2$s – %3$s</string>
     <plurals name="settings_import_entries">
@@ -304,7 +304,11 @@
         <item>→ bodyweight × 8</item>
         <item>→ half bodyweight × 20</item>
     </string-array>
-    <string name="settings_entry_format_note">One exercise per line. “kg” optional. Decimals with a dot: 72.5.</string>
+    <string-array name="settings_entry_format_notes">
+        <item>One exercise per line.</item>
+        <item>“kg” is optional.</item>
+        <item>Decimals with a dot: for example 72.5</item>
+    </string-array>
 
     <string name="settings_section_reset">Reset</string>
     <string name="settings_erase">Erase all data</string>

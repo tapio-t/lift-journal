@@ -42,7 +42,6 @@ class AppContainer(context: Context) {
         userDataRepository = userDataRepository,
         settingsRepository = settingsRepository,
         changeNotifier = changeNotifier,
-        todayProvider = todayProvider,
     )
 
     private companion object {

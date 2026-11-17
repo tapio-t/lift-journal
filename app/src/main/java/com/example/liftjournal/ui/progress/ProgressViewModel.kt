@@ -32,11 +32,11 @@ import java.time.LocalDate
 
 private const val STOP_TIMEOUT_MS = 5_000L
 
-/** What the user picked on the Progress tab. A null [period] means the current year. */
+/** What the user picked on the Progress tab. A null [period] means the current year; a null [view], none picked. */
 private data class ProgressInputs(
     val period: ProgressPeriod? = null,
     val isYearChipsOpen: Boolean = false,
-    val view: ProgressView = ProgressView.TOTAL_VOLUME,
+    val view: ProgressView? = null,
     val exerciseKey: String? = null,
     val goalIndex: Int = 0,
     val selectedBar: Int? = null,
@@ -96,7 +96,7 @@ class ProgressViewModel(
         val period =
             inputs.period.takeIf { it == ProgressPeriod.AllTime || (it as? ProgressPeriod.OneYear)?.year in years }
                 ?: ProgressPeriod.OneYear(today.year)
-        val view = if (inputs.view == ProgressView.GOAL && goals.isEmpty()) ProgressView.TOTAL_VOLUME else inputs.view
+        val view = shownView(inputs.view, hasGoals = goals.isNotEmpty())
         val namedGoals = goals.map { NamedGoal(it, exerciseDisplayName(it.exerciseKey.orEmpty(), entries)) }
         val goalIndex = inputs.goalIndex.coerceIn(0, maxOf(0, goals.lastIndex))
 
@@ -167,6 +167,17 @@ class ProgressViewModel(
 private fun availableViews(hasGoals: Boolean): List<ProgressView> {
     val chartViews = listOf(ProgressView.TOTAL_VOLUME, ProgressView.TOP_SET, ProgressView.EXERCISE_VOLUME)
     return if (hasGoals) listOf(ProgressView.GOAL) + chartViews else chartViews
+}
+
+/**
+ * The view to show for the user's [chosen] one. Until the user picks a view, the goal view (with the first goal set)
+ * is shown when a goal exists (owner decision), otherwise total volume. A chosen goal view falls back to total
+ * volume once the last goal is removed.
+ */
+internal fun shownView(chosen: ProgressView?, hasGoals: Boolean): ProgressView = when {
+    chosen == null -> if (hasGoals) ProgressView.GOAL else ProgressView.TOTAL_VOLUME
+    chosen == ProgressView.GOAL && !hasGoals -> ProgressView.TOTAL_VOLUME
+    else -> chosen
 }
 
 private fun JournalEntry.hasBodyweightSet(): Boolean = exercises.any { exercise ->

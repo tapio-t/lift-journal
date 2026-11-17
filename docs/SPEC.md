@@ -4,7 +4,7 @@ This describes what the Android app does. It is derived from the working prototy
 
 ## 1. Principles
 
-- **Fast logging.** Opening the app puts the cursor in today's entry. A set is typed as plain text: `deadlift 50 x 5`.
+- **Fast logging.** Today's entry is at the top; tapping it opens the keyboard. A set is typed as plain text: `deadlift 50 x 5`.
 - **Minimal black-and-white UI.** No colour accents. Journals is always black. Progress and Goals & Settings follow the theme setting (system, light or dark).
 - **Local only.** No account and no network access (no `INTERNET` permission). Data lives on the device and is backed up in real time to a folder the user picks.
 - **Calculations stay out of the journal.** Journals shows only dates and what the user wrote. Numbers live in Progress.
@@ -27,7 +27,7 @@ In portrait the tabs are a bottom bar. In landscape they are a navigation rail o
 - Below it is a list of journal entries, separated by thin lines. Each entry shows:
   - its date as the header, formatted `dd.mm.yyyy` (e.g. `09.11.2026`);
   - its text, editable in place.
-- The **top entry is today's**. When it's empty it shows only a blinking text cursor (`|`), plus the ghost text if that's enabled (3.4).
+- The **top entry is today's**. When it's empty it shows nothing, or the ghost text if that's enabled (3.4). The keyboard and a single text cursor appear only in the entry the user taps; tapping anywhere else, or closing search with ×, hides the keyboard. (Owner decision.)
 - Earlier entries follow, newest first.
 - There are no totals, volumes, labels or other calculations anywhere on this screen.
 
@@ -42,8 +42,7 @@ In portrait the tabs are a bottom bar. In landscape they are a navigation rail o
 
 - Typing saves automatically about 500 ms after the last keystroke. It also saves when the field loses focus and when the app goes to the background.
 - Every entry can be edited in place.
-- Tapping the date of the top entry opens a date picker. This lets the user write an entry for a past day that has none.
-- *(new)* **Edit menu:** every saved entry has a pen icon at the right edge of its date header. Tapping it opens a menu with "Change date" and "Delete". (Owner decision: a visible pen replaces the long-press menu.)
+- *(new)* **Edit menu:** every saved entry has a pen icon at the right edge of its date header. Tapping it opens a menu with "Change date" and "Delete". This is the only way to change an entry's date: to log a past day, type it in today's entry and then change its date. (Owner decision: a visible pen replaces the long-press menu.)
   - Delete first asks "Do you really want to delete journal entry?" with Delete and Cancel. Confirming removes the entry and shows a snackbar "Entry deleted · Undo" for about 5 seconds.
   - Clearing all of an entry's text also deletes it when the field loses focus, with the same Undo.
 - *(new)* **Change date** moves an entry to another date. If that date already has an entry, ask whether to merge: the moved text is appended below the existing text.
@@ -88,7 +87,7 @@ Rules:
 
 ### 5.1 Orientation and layout
 
-Progress is always landscape (`SCREEN_ORIENTATION_SENSOR_LANDSCAPE` while the tab is shown). The layout, top to bottom:
+Progress is always landscape (`SCREEN_ORIENTATION_SENSOR_LANDSCAPE` while the tab is shown). The rotation is requested before the tab switch, without a tab crossfade, and uses a quick cut instead of the turning animation. The layout, top to bottom:
 
 - **Header row:** the title "PROGRESS", the period control, and three stats on the right.
 
@@ -103,6 +102,7 @@ Progress is always landscape (`SCREEN_ORIENTATION_SENSOR_LANDSCAPE` while the ta
 - **"Show table / Show chart" toggle**
 - **Chart**, filling the remaining height
 - **Tag row:** `Goal` (only when at least one goal exists, always first), `Total volume / month`, `Top set / week`, `Exercise volume / month`
+  - *(new)* When a goal exists, `Goal` is selected when Progress opens, showing the first goal set. (Owner decision.)
 - **Exercise chips** for exercise views (weighted exercises in the period, sorted by volume). In the Goal view, goal chips are shown instead when there is more than one goal.
 
 ### 5.2 Period
@@ -157,7 +157,7 @@ One bar per year. The first year counts from its first logged month, and the cur
 Sections, top to bottom:
 
 1. **Goals**
-   - The list of goals, each with its current value, % of goal, and × to remove it.
+   - The list of goals, each with its current value, % of goal, and × to remove it. × first asks "Do you really want to delete goal (goal name)?" with Delete and Cancel; there is no Undo. (Owner decision.)
    - Below the list is a form:
      - **Goal type:** Top set weight, Average set weight, Total volume, or Exercise volume.
      - **Exercise:** for every type except Total volume.

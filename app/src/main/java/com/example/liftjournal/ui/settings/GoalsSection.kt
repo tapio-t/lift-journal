@@ -29,9 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.liftjournal.R
 import com.example.liftjournal.domain.format.formatWeight
-import com.example.liftjournal.domain.goals.Goal
 import com.example.liftjournal.domain.goals.GoalPeriod
 import com.example.liftjournal.domain.goals.GoalType
+import com.example.liftjournal.ui.common.NamedGoal
 import com.example.liftjournal.ui.common.goalFullName
 import com.example.liftjournal.ui.common.goalValueText
 import com.example.liftjournal.ui.common.styledStringResource
@@ -47,7 +47,7 @@ private val RemoveText = AppText.body.copy(fontSize = 18.sp)
 
 /** The goal list and the new-goal form (SPEC §6 item 1). */
 @Composable
-fun GoalsSection(goals: List<GoalRow>, form: GoalForm, onRemove: (Goal) -> Unit, actions: GoalFormActions) {
+fun GoalsSection(goals: List<GoalRow>, form: GoalForm, onRemove: (NamedGoal) -> Unit, actions: GoalFormActions) {
     goals.forEach { GoalListRow(it, onRemove) }
     if (goals.isNotEmpty()) {
         Text(
@@ -70,7 +70,7 @@ class GoalFormActions(
 )
 
 @Composable
-private fun GoalListRow(row: GoalRow, onRemove: (Goal) -> Unit) {
+private fun GoalListRow(row: GoalRow, onRemove: (NamedGoal) -> Unit) {
     val palette = LocalPalette.current
     val name = goalFullName(row.goal)
     Row(
@@ -97,7 +97,7 @@ private fun GoalListRow(row: GoalRow, onRemove: (Goal) -> Unit) {
                 .size(RemoveButtonSize)
                 .clip(CircleShape)
                 .border(BorderStroke(1.dp, palette.faint), CircleShape)
-                .clickable(role = Role.Button) { onRemove(row.goal.goal) }
+                .clickable(role = Role.Button) { onRemove(row.goal) }
                 .semantics { contentDescription = removeLabel },
             contentAlignment = Alignment.Center,
         ) {

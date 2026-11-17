@@ -196,6 +196,7 @@ Each phase ends with:
 ### Phase 7 — Import from text files (new)
 
 - In Goals & Settings, "Import from text file" (`OpenDocument`, MIME `text/plain` and `text/markdown`). A typical source is a Google Docs file downloaded as plain text (*File → Download → Plain text (.txt)*). No cloud access is involved.
+- *(new)* Word (`.docx`) and OpenDocument text (`.odt`) files are also accepted. They are recognised from their content (a zip archive with `word/document.xml` or `content.xml`), and each paragraph becomes a line before the rules below apply. A document part over 20 MB, or a zip without one, is reported as unreadable. Old binary `.doc` files are not supported. (Owner decision.)
 - **Format:**
   - A line that consists only of a date (optionally with a weekday word) starts a new entry. Everything up to the next date line becomes that entry's text.
   - Accepted dates: `9.11.2026`, `09.11.2026`, `9.11.26`, `2026-11-09`, with an optional weekday prefix in English or Finnish (`Mon 9.11.2026`, `ma 9.11.2026`).

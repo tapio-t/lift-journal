@@ -22,7 +22,7 @@ import com.example.liftjournal.domain.goals.Goal
 import com.example.liftjournal.domain.goals.GoalPeriod
 import com.example.liftjournal.domain.goals.GoalType
 import com.example.liftjournal.domain.importer.ImportConflictMode
-import com.example.liftjournal.domain.importer.decodeImportBytes
+import com.example.liftjournal.domain.importer.importFileText
 import com.example.liftjournal.domain.importer.parseImportText
 import com.example.liftjournal.domain.settings.ThemeMode
 import com.example.liftjournal.domain.time.TodayProvider
@@ -179,12 +179,17 @@ class SettingsViewModel(
         }
     }
 
-    /** The user picked a text file to import; it is split into entries and previewed (PLAN phase 7). */
+    /** The user picked a text, Word or OpenDocument file to import; it is split into entries and previewed. */
     fun onImportFilePicked(file: Uri?) {
         if (file == null) return
         viewModelScope.launch {
             val bytes = readFileOrNull(file) ?: return@launch
-            val textImport = withContext(Dispatchers.Default) { parseImportText(decodeImportBytes(bytes)) }
+            val text = withContext(Dispatchers.Default) { importFileText(bytes) }
+            if (text == null) {
+                events.send(SettingsEvent.FileUnreadable)
+                return@launch
+            }
+            val textImport = withContext(Dispatchers.Default) { parseImportText(text) }
             if (textImport.entries.isEmpty()) {
                 events.send(SettingsEvent.NoDatesFound)
                 return@launch

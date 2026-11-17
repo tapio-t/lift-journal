@@ -242,7 +242,7 @@
 
     <string name="settings_section_import">Import from text file</string>
     <string name="settings_import">Import from text file</string>
-    <string name="settings_import_hint">A line with only a date (9.11.2026, 2026-11-09, optionally after a weekday like Mon or ma) starts an entry. From Google Docs: File → Download → Plain text (.txt). Nothing is deleted.</string>
+    <string name="settings_import_hint">A line with only a date (9.11.2026, 2026-11-09, optionally after a weekday like Mon or ma) starts an entry. Text (.txt), Word (.docx) and OpenDocument (.odt) files work. From Google Docs: File → Download → Plain text or Microsoft Word. Nothing is deleted.</string>
     <string name="settings_import_title">Import this file?</string>
     <string name="settings_import_dates">%1$s · %2$s – %3$s</string>
     <plurals name="settings_import_entries">

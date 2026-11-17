@@ -26,6 +26,7 @@ import com.example.liftjournal.domain.importer.decodeImportBytes
 import com.example.liftjournal.domain.importer.parseImportText
 import com.example.liftjournal.domain.settings.ThemeMode
 import com.example.liftjournal.domain.time.TodayProvider
+import com.example.liftjournal.ui.common.NamedGoal
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -122,15 +123,12 @@ class SettingsViewModel(
         }
     }
 
-    fun onRemoveGoalClicked(goal: Goal) {
-        viewModelScope.launch {
-            journalRepository.removeGoal(goal.id)
-            events.send(SettingsEvent.GoalRemoved(goal))
-        }
-    }
+    /** × on a goal asks first; removing a goal can't be undone (owner decision). */
+    fun onRemoveGoalClicked(goal: NamedGoal) = inputs.update { it.copy(dialog = SettingsDialog.ConfirmRemoveGoal(goal)) }
 
-    fun onUndoRemoveGoal(goal: Goal) {
-        viewModelScope.launch { journalRepository.restoreGoal(goal) }
+    fun onRemoveGoalConfirmed(goal: Goal) {
+        inputs.update { it.copy(dialog = null) }
+        viewModelScope.launch { journalRepository.removeGoal(goal.id) }
     }
 
     /** Saves the typed bodyweight; anything that isn't a positive number clears it, as in the prototype. */

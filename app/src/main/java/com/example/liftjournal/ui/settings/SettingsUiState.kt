@@ -3,7 +3,6 @@ package com.example.liftjournal.ui.settings
 import com.example.liftjournal.backup.BackupOutcome
 import com.example.liftjournal.domain.backup.BackupData
 import com.example.liftjournal.domain.export.SpreadsheetFormat
-import com.example.liftjournal.domain.goals.Goal
 import com.example.liftjournal.domain.goals.GoalPeriod
 import com.example.liftjournal.domain.goals.GoalType
 import com.example.liftjournal.domain.importer.ImportConflictMode
@@ -73,6 +72,9 @@ sealed interface SettingsDialog {
 
     data object ConfirmErase : SettingsDialog
 
+    /** "Do you really want to delete goal …?" */
+    data class ConfirmRemoveGoal(val goal: NamedGoal) : SettingsDialog
+
     /** The import preview; [mode] can be switched before confirming. */
     data class ConfirmImport(val textImport: TextImport, val mode: ImportConflictMode) : SettingsDialog
 }
@@ -80,8 +82,6 @@ sealed interface SettingsDialog {
 /** One-off messages, shown as snackbars. */
 sealed interface SettingsEvent {
     data object GoalAdded : SettingsEvent
-
-    data class GoalRemoved(val goal: Goal) : SettingsEvent
 
     data object TargetMissing : SettingsEvent
 

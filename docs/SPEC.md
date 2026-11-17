@@ -157,7 +157,7 @@ One bar per year. The first year counts from its first logged month, and the cur
 Sections, top to bottom:
 
 1. **Goals**
-   - The list of goals, each with its current value, % of goal, and × to remove it.
+   - The list of goals, each with its current value, % of goal, and × to remove it. × first asks "Do you really want to delete goal (goal name)?" with Delete and Cancel; there is no Undo. (Owner decision.)
    - Below the list is a form:
      - **Goal type:** Top set weight, Average set weight, Total volume, or Exercise volume.
      - **Exercise:** for every type except Total volume.

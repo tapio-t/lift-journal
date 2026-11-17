@@ -187,7 +187,8 @@
     <string name="settings_goal_target_placeholder">kg</string>
     <string name="settings_goal_set">Set goal</string>
     <string name="settings_goal_added">Goal set · see Progress → Goal</string>
-    <string name="settings_goal_removed">Goal removed</string>
+    <string name="settings_goal_delete_question">Do you really want to delete goal %1$s?</string>
+    <string name="settings_goal_delete_confirm">Delete</string>
     <string name="settings_goal_enter_target">Enter a target in kg</string>
 
     <string name="settings_section_bodyweight">Bodyweight</string>

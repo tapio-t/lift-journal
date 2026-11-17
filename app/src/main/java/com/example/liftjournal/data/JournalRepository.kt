@@ -98,12 +98,6 @@ class JournalRepository(
         changeNotifier.notifyChanged()
     }
 
-    /** Undoes a goal removal. The goal keeps its id, so it returns to its place in the list. */
-    suspend fun restoreGoal(goal: Goal) {
-        goalDao.insert(goal.toEntity())
-        changeNotifier.notifyChanged()
-    }
-
     /**
      * Replaces every entry and goal in one transaction (restore from backup, erase all data), so a failure
      * leaves the old data untouched. Goals get new ids in the given order.

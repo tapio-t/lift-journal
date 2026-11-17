@@ -13,30 +13,19 @@ import com.example.liftjournal.domain.format.formatDayMonthYear
 import com.example.liftjournal.domain.format.formatWeight
 import com.example.liftjournal.domain.importer.ImportPreview
 import com.example.liftjournal.ui.common.ConfirmDialog
-import com.example.liftjournal.ui.common.showForAction
+import com.example.liftjournal.ui.common.goalFullName
 
-/** Shows the view model's one-off messages as snackbars; removing a goal offers Undo. */
+/** Shows the view model's one-off messages as snackbars. */
 @Composable
 fun SettingsEvents(viewModel: SettingsViewModel, snackbarHostState: SnackbarHostState) {
     val resources = LocalResources.current
     LaunchedEffect(viewModel) {
-        viewModel.oneOffEvents.collect { event ->
-            if (event is SettingsEvent.GoalRemoved) {
-                val undo = snackbarHostState.showForAction(
-                    resources.getString(R.string.settings_goal_removed),
-                    resources.getString(R.string.action_undo),
-                )
-                if (undo) viewModel.onUndoRemoveGoal(event.goal)
-                return@collect
-            }
-            snackbarHostState.showSnackbar(resources.message(event))
-        }
+        viewModel.oneOffEvents.collect { event -> snackbarHostState.showSnackbar(resources.message(event)) }
     }
 }
 
 private fun Resources.message(event: SettingsEvent): String = when (event) {
     SettingsEvent.GoalAdded -> getString(R.string.settings_goal_added)
-    is SettingsEvent.GoalRemoved -> getString(R.string.settings_goal_removed)
     SettingsEvent.TargetMissing -> getString(R.string.settings_goal_enter_target)
     is SettingsEvent.BodyweightSaved -> getString(R.string.settings_bodyweight_saved, formatWeight(event.kg))
     SettingsEvent.BodyweightCleared -> getString(R.string.settings_bodyweight_cleared)
@@ -86,6 +75,12 @@ fun SettingsDialogs(dialog: SettingsDialog?, importPreview: ImportPreview?, view
             message = stringResource(R.string.settings_erase_question),
             confirmLabel = stringResource(R.string.settings_erase_confirm),
             onConfirm = viewModel::onEraseConfirmed,
+            onDismiss = viewModel::onDialogDismissed,
+        )
+        is SettingsDialog.ConfirmRemoveGoal -> ConfirmDialog(
+            message = stringResource(R.string.settings_goal_delete_question, goalFullName(dialog.goal)),
+            confirmLabel = stringResource(R.string.settings_goal_delete_confirm),
+            onConfirm = { viewModel.onRemoveGoalConfirmed(dialog.goal.goal) },
             onDismiss = viewModel::onDialogDismissed,
         )
     }

@@ -102,6 +102,7 @@ Progress is always landscape (`SCREEN_ORIENTATION_SENSOR_LANDSCAPE` while the ta
 - **"Show table / Show chart" toggle**
 - **Chart**, filling the remaining height
 - **Tag row:** `Goal` (only when at least one goal exists, always first), `Total volume / month`, `Top set / week`, `Exercise volume / month`
+  - *(new)* When a goal exists, `Goal` is selected when Progress opens, showing the first goal set. (Owner decision.)
 - **Exercise chips** for exercise views (weighted exercises in the period, sorted by volume). In the Goal view, goal chips are shown instead when there is more than one goal.
 
 ### 5.2 Period
